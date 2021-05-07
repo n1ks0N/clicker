@@ -1,0 +1,8 @@
+.table-refs__td {
+  width: 25px;
+  height: 25px;
+  text-align: center;
+}
+.table-refs__td_active {
+  background-color: yellow;
+}

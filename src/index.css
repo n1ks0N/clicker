@@ -38,3 +38,9 @@ menu li:hover {
   justify-content: center;
   align-items: center;
 }
+.input-group {
+  align-items: flex-end;
+}
+.form-group {
+  margin-bottom: 0;
+}

@@ -1,9 +1,6 @@
 const initialState = {
-  money: 0,
-  lvl: 0,
-  output: 0,
-  mail: "",
-  referrer: "",
+  data: {},
+  mail: ''
 };
 
 const userReducer = (state = initialState, action) => {
@@ -11,39 +8,28 @@ const userReducer = (state = initialState, action) => {
     case "GET_USER_DATA":
       return {
         ...state,
-        mail: action.mail,
-        all_money: action.all_money,
-        allow_money: action.allow_money,
-        clicks: action.clicks,
-        date: action.date,
-        lvl: action.lvl,
-        purchases: action.purchases,
-        refs: action.refs,
+        data: action.data,
+        mail: action.mail
       };
+    case 'GET_REFERRER':
+      return {
+        ...state,
+        activeReferrer: action.activeReferrer
+      }
     default:
       return state;
   }
 };
 
 export const GetUserDataActionCreator = (
-  mail,
-  all_money,
-  allow_money,
-  clicks,
-  date,
-  lvl,
-  purchases,
-  refs
+  data,
+  mail
 ) => ({
   type: "GET_USER_DATA",
-  mail: mail,
-  all_money: all_money,
-  allow_money: allow_money,
-  clicks: clicks,
-  date: date,
-  lvl: lvl,
-  purchases: purchases,
-  refs: refs,
+  data: data,
+  mail: mail
 });
+
+export const GetReferrerActionCreator = (activeReferrer) => ({ type: 'GET_REFERRER', activeReferrer: activeReferrer })
 
 export default userReducer;

@@ -6,6 +6,7 @@ import { AuthContext } from "./Auth.js";
 
 const Sign = ({ history }) => {
   const { user } = useSelector((store) => store);
+  console.log(user);
   const [errorMessage, setErrorMessage] = useState("");
   const handleSign = useCallback(
     async (e) => {
@@ -21,32 +22,34 @@ const Sign = ({ history }) => {
               all_money: 0,
               allow_money: 0,
               clicks: 0,
-              date: 0,
+              date: false,
               lvl: 0,
               purchases: 0,
               refs: 0,
+              vip: 0,
+              referrer: user.activeReferrer ? user.activeReferrer : false,
             });
           })
           .then(() => {
             if (user.referrer) {
-              usersRef
-                .doc(`${user.referrer}`)
-                .get()
-                .then((doc) => {
-                  const needRefs = [3, 5, 6, 12, 14]; // необходимое кол-во рефералов для получения нового уровня
-                  // проверка уровня, после добавление реферала
-                  let lvl = 0;
-                  needRefs.forEach((val) => {
-                    if (doc.data().refs > val) lvl++;
-                  })
-                  usersRef.doc(`${user.referrer}`).set(
-                    {
-                      lvl: doc.data().lvl > lvl ? doc.data().lvl : lvl,
-                      refs: ++doc.data().refs,
-                    },
-                    { merge: true }
-                  );
-                });
+              // usersRef
+              //   .doc(`${user.referrer}`)
+              //   .get()
+              //   .then((doc) => {
+              //     const needRefs = [3, 5, 6, 12, 14]; // необходимое кол-во рефералов для получения нового уровня
+              //     // проверка уровня, после добавление реферала
+              //     let lvl = 0;
+              //     needRefs.forEach((val) => {
+              //       if (doc.data().refs > val) lvl++;
+              //     });
+              //     usersRef.doc(`${user.referrer}`).set(
+              //       {
+              //         lvl: doc.data().lvl > lvl ? doc.data().lvl : lvl,
+              //         refs: ++doc.data().refs,
+              //       },
+              //       { merge: true }
+              //     );
+              //   });
             }
           });
         history.push("/user");

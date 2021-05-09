@@ -1,18 +1,43 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { fb } from "../utils/constants/firebase";
 
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
+  const dispatch = useDispatch();
   const [currentUser, setCurrentUser] = useState(null);
   const [pending, setPending] = useState(true);
   useEffect(() => {
+    const ac = new AbortController();
     fb.auth().onAuthStateChanged((user) => {
       setCurrentUser(user);
       setPending(false);
+      if (user) {
+        const docRef = fb.firestore().collection("users").doc(`${user.email}`);
+        docRef
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              dispatch({
+                type: 'GET_USER_DATA',
+                data: doc.data(),
+                mail: user.email
+              })
+            } else {
+              // Пользователь незарегистрирован
+            }
+          })
+          .catch((error) => {
+            // Ошибка
+          });
+      } else {
+        // Пользователь не залогнинен
+      }
     });
+    return () => ac.abort();
   }, []);
-  if (pending)
+  if (pending) {
     return (
       <div className="loader">
         <div className="spinner-border text-primary" role="status">
@@ -20,6 +45,7 @@ export const AuthProvider = ({ children }) => {
         </div>
       </div>
     );
+  }
   return (
     <AuthContext.Provider value={{ currentUser }}>
       {children}

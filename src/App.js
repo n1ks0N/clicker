@@ -1,9 +1,10 @@
 import React, { useState, useLayoutEffect, useContext } from "react";
 import { urlAd, keyAd } from "./utils/constants/api.json";
 import { Route, Switch, Link, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fb } from "./utils/constants/firebase";
-import { AuthProvider, AuthContext } from "./components/Auth";
+import Clicks from "./components/clicks/Clicks";
+import { AuthProvider } from "./components/Auth";
 import Login from "./components/Login";
 import Sign from "./components/Sign";
 import User from "./components/User";
@@ -12,47 +13,17 @@ import "./App.css";
 
 const App = () => {
   const dispatch = useDispatch();
-  const referrer = useLocation().search.split("=")[1];
+  const activeReferrer = useLocation().search.split("=")[1];
 
   const [data, setData] = useState(null); // jsonbin: рекламный контент, админ-панель
   useLayoutEffect(() => {
     // начилие реферала
-    if (referrer) {
+    if (activeReferrer) {
       dispatch({
-        type: "GET_USER_DATA",
-        referrer: referrer,
+        type: "GET_REFERRER",
+        activeReferrer: activeReferrer,
       });
     }
-    // сохранение данных зарегистрированного пользователя
-    fb.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        const docRef = fb.firestore().collection("users").doc(`${user.email}`);
-        docRef
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              dispatch({
-                type: "GET_USER_DATA",
-                mail: user.email,
-                all_money: doc.data().all_money,
-                allow_money: doc.data().allow_money,
-                clicks: doc.data().clicks,
-                date: doc.data().date,
-                lvl: doc.data().lvl,
-                purchases: doc.data().purchases,
-                refs: doc.data().refs,
-              });
-            } else {
-              // Пользователь незарегистрирован
-            }
-          })
-          .catch((error) => {
-            // Ошибка
-          });
-      } else {
-        // Пользователь не залогнинен
-      }
-    });
 
     // получение данных из jsonbin; преобладает рекламный контент
     let req = new XMLHttpRequest();
@@ -109,6 +80,21 @@ by https://github.com/n1ks0N
           <Link to="/">
             <li>Главная</li>
           </Link>
+          <Link to="/clicks/1">
+            <li>1 клик</li>
+          </Link>
+          <Link to="/clicks/2">
+            <li>2 клика</li>
+          </Link>
+          <Link to="/clicks/3">
+            <li>3 клика</li>
+          </Link>
+          <Link to="/clicks/4">
+            <li>4 клика</li>
+          </Link>
+          <Link to="/clicks/5">
+            <li>5 кликов</li>
+          </Link>
           <Link to="/user">
             <li>Личный кабинет</li>
           </Link>
@@ -145,6 +131,8 @@ by https://github.com/n1ks0N
           </div>
         </div>
         <Switch>
+          <Route exact path="/" />
+          <Route path="/clicks/:id" component={Clicks} />
           <AuthProvider>
             <PrivateRoute path="/user" component={User} />
             <Route path="/login" component={Login} />

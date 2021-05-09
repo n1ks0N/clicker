@@ -6,3 +6,8 @@
 .table-refs__td_active {
   background-color: yellow;
 }
+.row {
+  align-items: flex-end;
+  margin-left: 0 !important; 
+  margin-right: 0 !important;
+}

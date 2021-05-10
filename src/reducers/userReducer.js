@@ -16,6 +16,14 @@ const userReducer = (state = initialState, action) => {
         ...state,
         activeReferrer: action.activeReferrer
       }
+    case 'UPDATE_USER_DATA':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [action.name]: action.param
+        }
+      }
     default:
       return state;
   }
@@ -31,5 +39,7 @@ export const GetUserDataActionCreator = (
 });
 
 export const GetReferrerActionCreator = (activeReferrer) => ({ type: 'GET_REFERRER', activeReferrer: activeReferrer })
+
+export const UpdateUserDataActionCreator = (name, param) => ({ type: 'UPDATE_USER_DATA', name: name, param: param })
 
 export default userReducer;

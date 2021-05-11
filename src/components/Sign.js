@@ -32,24 +32,17 @@ const Sign = ({ history }) => {
           })
           .then(() => {
             if (user.referrer) {
-              // usersRef
-              //   .doc(`${user.referrer}`)
-              //   .get()
-              //   .then((doc) => {
-              //     const needRefs = [3, 5, 6, 12, 14]; // необходимое кол-во рефералов для получения нового уровня
-              //     // проверка уровня, после добавление реферала
-              //     let lvl = 0;
-              //     needRefs.forEach((val) => {
-              //       if (doc.data().refs > val) lvl++;
-              //     });
-              //     usersRef.doc(`${user.referrer}`).set(
-              //       {
-              //         lvl: doc.data().lvl > lvl ? doc.data().lvl : lvl,
-              //         refs: ++doc.data().refs,
-              //       },
-              //       { merge: true }
-              //     );
-              //   });
+              usersRef
+                .doc(`${user.referrer}`)
+                .get()
+                .then((doc) => {
+                  usersRef.doc(`${user.referrer}`).set(
+                    {
+                      refs: ++doc.data().refs,
+                    },
+                    { merge: true }
+                  );
+                });
             }
           });
         history.push("/user");

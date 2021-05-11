@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import firebase from 'firebase'
 import { fb } from "../utils/constants/firebase";
 import Input from "../elements/Input";
 import Select from "../elements/Select";
@@ -10,7 +11,6 @@ import "./User.css";
 const User = () => {
   const dispatch = useDispatch()
   const { user: { data, mail }, task: { tasks } } = useSelector((store) => store);
-  console.log(tasks)
   const [date, setDate] = useState(null);
   const [walletValue, setWalletValue] = useState("");
   const [outputValue, setOutputValue] = useState("");
@@ -48,37 +48,44 @@ const User = () => {
     }
   }, [data.date]);
   useEffect(() => {
-    if (data.vip !== data.lvl) {
+    if (data.vip == data.lvl && mail) {
       const day = 86400000
       // присвоить новый lvl
       // пройтись по рефералам и выдать 10%
-      docRef.set({
-        lvl: data.vip,
-        date: data.vip > 3 ? new Date(Date.now() + day * 90) : new Date(Date.now() + day * 30),
-        purchases: data.purchases + data.vip*100
-      }, {
-        merge: true
-      })
+      // docRef.set({
+      //   lvl: data.vip,
+      //   date: data.vip > 3 ? new Date(Date.now() + day * 90) : new Date(Date.now() + day * 30),
+      //   purchases: data.purchases + data.vip * 100
+      // }, {
+      //   merge: true
+      // })
       const cost = 10;
       let referrerMail = mail
-      let referrerRef = db.collection('users')
+      const referrerRef = db.collection('users')
       for (let i = 0; i < 5; i++) {
-        console.log(referrerMail)
-        db.collection('users').doc(`${referrerMail}`).get().then((doc) => {
-          if (doc.exists) {
-            console.log(doc.data())
-            referrerMail = doc.data().referrer
-            if (doc.data().referrer) {
-              // referrerRef.doc(`${doc.data().referrer}`).get().then((doc) => {
-              //   referrerRef.doc(`${doc.data().referrer}`).set({
-              //     allow_money: doc.data().allow_money + cost*doc.data().vip,
-              //     all_money: doc.data().all_money + cost*doc.data().vip
-              //   }, { merge: true })
-              // })
-            } else {
-              console.log(1)
-            }
-          }
+        // console.log('ДО: ', referrerMail)
+        // db.collection('users').doc(`${referrerMail}`).get().then((doc) => {
+        //   if (doc.exists) {
+        //     console.log(doc.data().referrer)
+        //     referrerMail = doc.data().referrer
+        //     if (doc.data().referrer) {
+        //       console.log('ПОСЛЕ: ', referrerMail)
+        //       referrerRef.doc(`${doc.data().referrer}`).get().then((doc) => {
+        //         referrerRef.doc(`${doc.data().referrer}`).set({
+        //           allow_money: doc.data().allow_money + cost*doc.data().vip,
+        //           all_money: doc.data().all_money + cost*doc.data().vip
+        //         }, { merge: true })
+        //       })
+        //     } else {
+        //       console.log(1)
+        //     }
+        //   }
+        // })
+        referrerRef.where('referrer', '==', referrerMail).get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+          });
         })
       }
     }
@@ -147,6 +154,43 @@ const User = () => {
         param: data.clicks - Number(totalClicksValue) * categoryValue.length
       })
     }
+  }
+  const addCounts = ({ id }) => {
+    const taskId = id.split('/')[0] // идентификатор
+    const taskDoc = id.split('/')[1] // категория
+    db.collection('tasks').doc(`${taskDoc}`).get().then((doc) => {
+      if (doc.exists) {
+        for (let key in doc.data()) {
+          if (doc.data()[key].id === taskId) {
+            db.collection('tasks').doc(`${taskDoc}`).set({
+              [key]: {
+                author: mail,
+                id: doc.data()[key].id,
+                reports: doc.data()[key].reports,
+                total_clicks: doc.data()[key].total_clicks + 10,
+                spent_clicks: doc.data()[key].spent_clicks,
+                urls: doc.data()[key].urls
+              }
+            }, { merge: true })
+          }
+        }
+      }
+    })
+  }
+  const deleteTask = ({ id }) => {
+    const taskId = id.split('/')[0]
+    const taskDoc = id.split('/')[1]
+    db.collection('tasks').doc(`${taskDoc}`).get().then((doc) => {
+      if (doc.exists) {
+        for (let key in doc.data()) {
+          if (doc.data()[key].id === taskId) {
+            db.collection('tasks').doc(`${taskDoc}`).update({
+              [key]: firebase.firestore.FieldValue.delete()
+            })
+          }
+        }
+      }
+    })
   }
   const copy = (e) => {
     e.persist();
@@ -219,20 +263,20 @@ const User = () => {
       </table> */}
       <h4>Ваш уровень: {data.lvl}</h4>
       {!!date && (
-        <p>Уровень активен до: {`${date.getDate()}/${date.getMonth() + 1}`}</p>
+        <p>Уровень активен до: {`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}</p>
       )}
       <p>Общая сумма пополней: {data.purchases} ₽</p>
       <h4>Задания</h4>
       <h5>Ваши задания</h5>
-      {tasks.map(data =>
-        <div key={data.id}>
+      {tasks.map((data, i) =>
+        <div key={i}>
           <p>Категория: {data.urls.length}</p>
-          <p>Доступно выполнений: {data.total_clicks - data.spent_clicks}/{data.total_clicks} <button type="button" className="btn btn-success btn-sm">+</button></p>
+          <p>Доступно выполнений: {data.total_clicks - data.spent_clicks}/{data.total_clicks} <button id={`${data.id}/${data.urls.length}/add`} type="button" className="btn btn-success btn-sm" onClick={(e) => addCounts(e.target)}>+</button></p>
           <p>Ссылки: </p>
-            <ul>
-              {data.urls.map((link, i) => <li key={i}>{link}</li>)}
-            </ul>
-          <button type="button" className="btn btn-danger">Удалить</button>
+          <ul>
+            {data.urls.map((link, i) => <li key={i}>{link}</li>)}
+          </ul>
+          <button type="button" className="btn btn-danger" id={`${data.id}/${data.urls.length}/del`} onClick={(e) => deleteTask(e.target)}>Удалить</button>
         </div>)
       }
       <h5>Создать задание</h5>

@@ -132,7 +132,7 @@ by https://github.com/n1ks0N
         </div>
         <Switch>
           <Route exact path="/" />
-          <Route path="/clicks/:id" component={Clicks} />
+          <Route path="/clicks/:category" component={Clicks} />
           <AuthProvider>
             <PrivateRoute path="/user" component={User} />
             <Route path="/login" component={Login} />

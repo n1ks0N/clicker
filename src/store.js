@@ -4,7 +4,7 @@ import taskReducer from './reducers/taskReducer'
 
 const reducers = combineReducers({
   user: userReducer,
-  task: taskReducer
+  tasks: taskReducer
 });
 
 const store = createStore(reducers);

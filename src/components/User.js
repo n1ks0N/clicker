@@ -10,18 +10,16 @@ import "./User.css";
 
 const User = () => {
   const dispatch = useDispatch()
-  const { user: { data, mail }, task: { tasks } } = useSelector((store) => store);
+  const { user: { data, mail }, tasks: { tasks } } = useSelector((store) => store);
   const [date, setDate] = useState(null);
   const [walletValue, setWalletValue] = useState("");
   const [outputValue, setOutputValue] = useState("");
+  const [nameValue, setNameValue] = useState('')
   const [categoryValue, setCategoryValue] = useState([1]);
   const [totalClicksValue, setTotalClicksValue] = useState(10);
+  const [update, setUpdate] = useState(false);
   const db = fb.firestore();
   const docRef = mail ? db.collection("users").doc(`${mail}`) : [];
-  // useEffect(() => {docRef.onSnapshot((doc) => {
-  //       console.log("Current data: ", doc.data());
-  //   });
-  // }, [docRef]);
   useEffect(() => {
     if (mail) {
       // docRef.get().then((doc) => {
@@ -91,7 +89,7 @@ const User = () => {
     }
   }, [data.vip, data.lvl]);
   useEffect(() => {
-    if (data) {
+    if (mail) {
       dispatch({
         type: 'CLEAR_TASKS'
       })
@@ -101,8 +99,8 @@ const User = () => {
             for (let key in doc.data()) {
               if (doc.data()[key].author === mail) {
                 dispatch({
-                  type: 'GET_USER_TASKS',
-                  tasks: doc.data()[key]
+                  type: 'GET_USER_TASK',
+                  task: doc.data()[key]
                 })
               }
             }
@@ -110,7 +108,7 @@ const User = () => {
         })
       }
     }
-  }, [data])
+  }, [mail, update])
 
   const withdrawal = () => {
     console.log(walletValue, outputValue);
@@ -120,10 +118,10 @@ const User = () => {
       const values = document.querySelectorAll(".category-input__url");
       let urls = [] // ссылки в задании
       values.forEach(({ value }) => {
-        value.length > 0 ? urls.push(value) : urls.push('/') // пустые ссылки заменяются на "/"
+        value.length > 0 ? (value.includes('://') ? urls.push(value) : urls.push(`//${value}`) ) : urls.push('/') // пустые ссылки заменяются на "/"; перед ссылками без "://" добавляется "//" для корректной работы ссылок
       });
       /* 
-        Reference example
+        Пример хранения данных в БД
         Firestore:
         tasks: { ...tasks, task1: { ...params }, task2 }
         users: { ...users, task_1: { id: 1, ref: tasks/task1 } }
@@ -139,7 +137,8 @@ const User = () => {
               total_clicks: Number(totalClicksValue),
               spent_clicks: 0,
               urls,
-              id: createName(4)
+              id: createName(4),
+              name: nameValue.length > 70 ? nameValue.substr(0, 69) : nameValue,
             }
           }, { merge: true })
         }
@@ -147,7 +146,7 @@ const User = () => {
         docRef.set({
           clicks: data.clicks - Number(totalClicksValue) * categoryValue.length
         }, { merge: true })
-      })
+      }).then(() => setUpdate(prev => !prev))
       dispatch({ // обновить клики
         type: 'UPDATE_USER_DATA',
         name: 'clicks',
@@ -164,18 +163,13 @@ const User = () => {
           if (doc.data()[key].id === taskId) {
             db.collection('tasks').doc(`${taskDoc}`).set({
               [key]: {
-                author: mail,
-                id: doc.data()[key].id,
-                reports: doc.data()[key].reports,
                 total_clicks: doc.data()[key].total_clicks + 10,
-                spent_clicks: doc.data()[key].spent_clicks,
-                urls: doc.data()[key].urls
               }
             }, { merge: true })
           }
         }
       }
-    })
+    }).then(() => setUpdate(prev => !prev))
   }
   const deleteTask = ({ id }) => {
     const taskId = id.split('/')[0]
@@ -190,7 +184,7 @@ const User = () => {
           }
         }
       }
-    })
+    }).then(() => setUpdate(prev => !prev))
   }
   const copy = (e) => {
     e.persist();
@@ -269,18 +263,28 @@ const User = () => {
       <h4>Задания</h4>
       <h5>Ваши задания</h5>
       {tasks.map((data, i) =>
-        <div key={i}>
+        <div key={i} className={data.total_clicks > data.spent_clicks ? 'task_active' : 'task_disabled'}>
+          <h5>{data.name}</h5>
           <p>Категория: {data.urls.length}</p>
           <p>Доступно выполнений: {data.total_clicks - data.spent_clicks}/{data.total_clicks} <button id={`${data.id}/${data.urls.length}/add`} type="button" className="btn btn-success btn-sm" onClick={(e) => addCounts(e.target)}>+</button></p>
           <p>Ссылки: </p>
           <ul>
             {data.urls.map((link, i) => <li key={i}>{link}</li>)}
           </ul>
+          <p>Жалоб: {data.reports}</p>
           <button type="button" className="btn btn-danger" id={`${data.id}/${data.urls.length}/del`} onClick={(e) => deleteTask(e.target)}>Удалить</button>
         </div>)
       }
       <h5>Создать задание</h5>
       <div>
+        <Input
+          text="Название задания"
+          name="name"
+          value={nameValue}
+          setValue={setNameValue}
+          placeholder="Какой-то текст..."
+          i="0"
+        />
         <Select
           text="Выберите категорию (количество кликов на сайте)"
           name="category"
@@ -289,7 +293,7 @@ const User = () => {
         />
         <label>Количество выполнений</label>
         <input type="number" className="form-control" value={totalClicksValue} readOnly />
-        <button type="button" className="btn btn-success btn-sm" onClick={() => setTotalClicksValue((prev) => prev + 10)}>+</button>
+        <button type="button" className="btn btn-success btn-sm" onClick={() => setTotalClicksValue((prev) => prev + 10)}>Добавить 10 выполнений</button>
         {/* <Input
           text="Количество выполнений заданий"
           type="number"

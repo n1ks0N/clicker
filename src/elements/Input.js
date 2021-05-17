@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 
-const Input = ({ text, type, value, setValue, name, placeholder, i }) => {
+const Input = ({ text, type, value, setValue, name, placeholder, i, min }) => {
   const inputRef = useRef(value);
   const record = () => {
     setValue(inputRef.current.value);
@@ -17,6 +17,7 @@ const Input = ({ text, type, value, setValue, name, placeholder, i }) => {
           ref={inputRef}
           value={value}
           onChange={record}
+          min={min}
         />
       </div>
     </div>

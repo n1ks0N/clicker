@@ -6,7 +6,6 @@ import { AuthContext } from "./Auth.js";
 
 const Sign = ({ history }) => {
   const { user } = useSelector((store) => store);
-  console.log(user);
   const [errorMessage, setErrorMessage] = useState("");
   const handleSign = useCallback(
     async (e) => {
@@ -19,13 +18,19 @@ const Sign = ({ history }) => {
           .createUserWithEmailAndPassword(email.value, password.value)
           .then(() => {
             usersRef.doc(`${email.value}`).set({
-              all_money: 0,
+              output_money: 0,
               allow_money: 0,
               clicks: 0,
               date: false,
               lvl: 0,
               purchases: 0,
-              refs: 0,
+              refs: [
+                { count: 0, sum: 0 },
+                { count: 0, sum: 0 },
+                { count: 0, sum: 0 },
+                { count: 0, sum: 0 },
+                { count: 0, sum: 0 },
+              ],
               vip: 0,
               referrer: user.activeReferrer ? user.activeReferrer : false,
             });

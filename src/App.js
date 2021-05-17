@@ -130,15 +130,15 @@ by https://github.com/n1ks0N
               ))}
           </div>
         </div>
-        <Switch>
-          <Route exact path="/" />
-          <Route path="/clicks/:category" component={Clicks} />
-          <AuthProvider>
+        <AuthProvider>
+          <Switch>
+            <Route exact path="/" />
+            <Route path="/clicks/:category" component={Clicks} />
             <PrivateRoute path="/user" component={User} />
             <Route path="/login" component={Login} />
             <Route path="/sign" component={Sign} />
-          </AuthProvider>
-        </Switch>
+          </Switch>
+        </AuthProvider>
         <div className="ad__list">
           {/* рекламная секция */}
           {!!data &&

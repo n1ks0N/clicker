@@ -20,10 +20,10 @@ export const AuthProvider = ({ children }) => {
           .then((doc) => {
             if (doc.exists) {
               dispatch({
-                type: 'GET_USER_DATA',
+                type: "GET_USER_DATA",
                 data: doc.data(),
-                mail: user.email
-              })
+                mail: user.email,
+              });
             } else {
               // Пользователь незарегистрирован
             }

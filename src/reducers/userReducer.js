@@ -1,6 +1,6 @@
 const initialState = {
   data: {},
-  mail: ''
+  mail: "",
 };
 
 const userReducer = (state = initialState, action) => {
@@ -9,37 +9,41 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         data: action.data,
-        mail: action.mail
+        mail: action.mail,
       };
-    case 'GET_REFERRER':
+    case "GET_REFERRER":
       return {
         ...state,
-        activeReferrer: action.activeReferrer
-      }
-    case 'UPDATE_USER_DATA':
+        activeReferrer: action.activeReferrer,
+      };
+    case "UPDATE_USER_DATA":
       return {
         ...state,
         data: {
           ...state.data,
-          [action.name]: action.param
-        }
-      }
+          [action.name]: action.param,
+        },
+      };
     default:
       return state;
   }
 };
 
-export const GetUserDataActionCreator = (
-  data,
-  mail
-) => ({
+export const GetUserDataActionCreator = (data, mail) => ({
   type: "GET_USER_DATA",
   data: data,
-  mail: mail
+  mail: mail,
 });
 
-export const GetReferrerActionCreator = (activeReferrer) => ({ type: 'GET_REFERRER', activeReferrer: activeReferrer })
+export const GetReferrerActionCreator = (activeReferrer) => ({
+  type: "GET_REFERRER",
+  activeReferrer: activeReferrer,
+});
 
-export const UpdateUserDataActionCreator = (name, param) => ({ type: 'UPDATE_USER_DATA', name: name, param: param })
+export const UpdateUserDataActionCreator = (name, param) => ({
+  type: "UPDATE_USER_DATA",
+  name: name,
+  param: param,
+});
 
 export default userReducer;

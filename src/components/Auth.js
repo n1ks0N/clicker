@@ -33,10 +33,10 @@ export const AuthProvider = ({ children }) => {
 					});
 			} else {
 				dispatch({
-          type: 'GET_USER_DATA',
-          data: {},
-          mail: ''
-        })
+					type: 'GET_USER_DATA',
+					data: {},
+					mail: ''
+				});
 			}
 		});
 		return () => ac.abort();

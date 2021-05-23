@@ -95,7 +95,7 @@ by https://github.com/n1ks0N
 					<Link to="/clicks/5">
 						<li>5 кликов</li>
 					</Link>
-					<Link to="/user">
+					<Link to="/user?profile">
 						<li>Личный кабинет</li>
 					</Link>
 				</menu>

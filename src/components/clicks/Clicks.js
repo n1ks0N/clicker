@@ -12,7 +12,7 @@ const Clicks = () => {
 	const [completeUrls, setCompleteUrls] = useState([]);
 	const [update, setUpdate] = useState(false);
 	const [observer, setObserver] = useState(false); // отслеживает выполнение заданий
-	const [sumTime, setSumTime] = useState(15); // считает время, проводимое на ссылках из заданий
+	const [sumTime, setSumTime] = useState(1); // считает время, проводимое на ссылках из заданий
 	const tasksDB = fb.firestore().collection('tasks');
 	const docRef = mail ? fb.firestore().collection('users').doc(`${mail}`) : '';
 	window.onfocus = () => {
@@ -32,6 +32,7 @@ const Clicks = () => {
 	}, [category, update]);
 	useEffect(() => {
 		if (observer && sumTime > 0) {
+			document.title = `${sumTime} сек осталось | Кликер`;
 			let timerId = setTimeout(() => {
 				setSumTime((prev) => prev - 1);
 			}, 1000);
@@ -47,6 +48,7 @@ const Clicks = () => {
 				setCompleteUrls((prev) => [...prev, { id: id, href: href }]);
 		} else {
 			setCompleteUrls([taskId, { id: id, href: href }]);
+			setSumTime(15);
 		}
 	};
 	const report = ({ id }) => {
@@ -73,7 +75,10 @@ const Clicks = () => {
 	};
 	useEffect(() => {
 		if (completeUrls.length - 1 === Number(category) && sumTime <= 0) {
-			setSumTime(15);
+			console.log('yes');
+			setObserver(false);
+			setCompleteUrls([]);
+			document.title = 'Задание выполнено | Кликер';
 			tasksDB
 				.doc(`${category}`)
 				.get()
@@ -95,26 +100,20 @@ const Clicks = () => {
 					}
 				})
 				.then(() => {
-					fb.firestore()
-						.collection('users')
-						.doc(`${mail}`)
-						.get()
-						.then((doc) => {
-							if (doc.exists) {
-								docRef.set(
-									{
-										clicks: doc.data().clicks + Number(category)
-									},
-									{ merge: true }
-								);
-							}
-						});
+					docRef.get().then((doc) => {
+						if (doc.exists) {
+							docRef.set(
+								{
+									clicks: doc.data().clicks + Number(category)
+								},
+								{ merge: true }
+							);
+						}
+					});
 				})
 				.then(() => setUpdate((prev) => !prev));
-		} else if (completeUrls.length - 1 === Number(category)) {
-			setCompleteUrls([]);
 		}
-	}, [completeUrls]);
+	}, [completeUrls, sumTime]);
 	return (
 		<div>
 			<h1>Категория: {category} клика</h1>
@@ -129,7 +128,23 @@ const Clicks = () => {
 							) && (
 								<div key={i}>
 									<h3>{data.name}</h3>
-									<p>Автор: {data.author}</p>
+									<p>
+										Автор:{' '}
+										{data.author.split('@')[0].split('').splice(0, 3).join('')}
+										...
+										{data.author
+											.split('@')[0]
+											.split('')
+											.reverse()
+											.splice(0, 3)
+											.reverse()
+											.join('')}
+									</p>
+									<p>Выполнений: {data.spent_clicks / category}</p>
+									<p>
+										Осталось:{' '}
+										{(data.total_clicks - data.spent_clicks) / category}
+									</p>
 									{data.urls.map((link, i) => (
 										<a
 											href={link}

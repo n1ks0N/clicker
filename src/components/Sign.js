@@ -23,7 +23,7 @@ const Sign = ({ history }) => {
 							clicks: 0,
 							date: false,
 							lvl: 0,
-							purchases: 0,
+							recd: 0,
 							refs: [
 								{ count: 0, sum: 0 },
 								{ count: 0, sum: 0 },
@@ -37,17 +37,17 @@ const Sign = ({ history }) => {
 					})
 					.then(() => {
 						if (user.referrer) {
-							usersRef
-								.doc(`${user.referrer}`)
-								.get()
-								.then((doc) => {
-									usersRef.doc(`${user.referrer}`).set(
-										{
-											refs: ++doc.data().refs
-										},
-										{ merge: true }
-									);
-								});
+							// usersRef
+							// 	.doc(`${user.referrer}`)
+							// 	.get()
+							// 	.then((doc) => {
+							// 		usersRef.doc(`${user.referrer}`).set(
+							// 			{
+							// 				refs: ++doc.data().refs
+							// 			},
+							// 			{ merge: true }
+							// 		);
+							// 	});
 						}
 					});
 				history.push('/user');

@@ -1,3 +1,47 @@
 {
-  "categories": [1, 2, 3, 4, 5]
+  "categories": [1, 2, 3, 4, 5],
+  "vip": [
+    {
+      "id": "1",
+      "price": "100",
+      "percent": "50",
+      "days": "30",
+      "clicks": "1000"
+    },
+    {
+      "id": "2",
+      "price": "200",
+      "percent": "100",
+      "days": "30",
+      "clicks": "2000"
+    },
+    {
+      "id": "3",
+      "price": "300",
+      "percent": "150",
+      "days": "30",
+      "clicks": "3000"
+    },
+    {
+      "id": "4",
+      "price": "500",
+      "percent": "100",
+      "days": "90",
+      "clicks": "6000"
+    },
+    {
+      "id": "5",
+      "price": "700",
+      "percent": "150",
+      "days": "90",
+      "clicks": "9000"
+    },
+    {
+      "id": "6",
+      "price": "1000",
+      "percent": "200",
+      "days": "90",
+      "clicks": "12000"
+    }
+  ]
 }

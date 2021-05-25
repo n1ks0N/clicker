@@ -13,7 +13,7 @@ const Add = ({ data, mail, setUpdate }) => {
 	const [categoryValue, setCategoryValue] = useState([1]);
 	const [totalClicksValue, setTotalClicksValue] = useState(10);
 	const tasksDB = fb.firestore().collection('tasks');
-	const docRef = mail
+	const userDoc = mail
 		? fb.firestore().collection('users').doc(`${mail}`)
 		: false;
 	const createTask = () => {
@@ -54,8 +54,7 @@ const Add = ({ data, mail, setUpdate }) => {
 									spent_clicks: 0,
 									urls,
 									id: createName(4),
-									name:
-										nameValue.length > 70 ? nameValue.substr(0, 69) : nameValue
+									name: nameValue.substr(0, 69)
 								}
 							},
 							{ merge: true }
@@ -63,13 +62,17 @@ const Add = ({ data, mail, setUpdate }) => {
 					}
 				})
 				.then(() => {
-					docRef.set(
-						{
-							clicks:
-								data.clicks - Number(totalClicksValue) * categoryValue.length
-						},
-						{ merge: true }
-					);
+					userDoc.get().then((doc) => {
+						if (doc.exists) {
+							userDoc.set(
+								{
+									clicks:
+										doc.data().clicks - totalClicksValue * categoryValue.length
+								},
+								{ merge: true }
+							);
+						}
+					});
 				})
 				.then(() => setUpdate((prev) => !prev))
 				.then(() =>

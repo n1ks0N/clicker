@@ -7,7 +7,7 @@
   background-color: yellow;
 }
 .row {
-  align-items: flex-end;
+  /* align-items: flex-end; */
   margin-left: 0 !important; 
   margin-right: 0 !important;
 }

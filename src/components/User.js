@@ -27,7 +27,8 @@ const User = () => {
 
 	const tasksDB = fb.firestore().collection('tasks');
 	const usersDB = fb.firestore().collection('users');
-	const docRef = mail
+	const bidsDoc = fb.firestore().collection('tasks').doc('bids');
+	const userDoc = mail
 		? fb.firestore().collection('users').doc(`${mail}`)
 		: false;
 
@@ -40,7 +41,7 @@ const User = () => {
 			// setDate(new Date(data.date.seconds * 1000));
 			if (Date.now() > data.date.seconds * 1000) {
 				// обнуление VIP
-				docRef.set(
+				userDoc.set(
 					{
 						lvl: 0,
 						vip: 0,
@@ -102,7 +103,7 @@ const User = () => {
 			const day = 86400000;
 			// присвоить новый lvl
 			// пройтись по рефералам и выдать 10%
-			// docRef.set({
+			// userDoc.set({
 			//   lvl: data.vip,
 			//   date: data.vip > 3 ? new Date(Date.now() + day * 90) : new Date(Date.now() + day * 30),
 			//   purchases: data.purchases + data.vip * 100
@@ -123,6 +124,7 @@ const User = () => {
 				type: 'CLEAR_TASKS'
 			});
 			for (let i = 1; i <= 5; i++) {
+				// перенести в tasks
 				tasksDB
 					.doc(`${i}`)
 					.get()
@@ -139,6 +141,27 @@ const User = () => {
 						}
 					});
 			}
+			// dispatch({
+			// 	type: 'CLEAR_BIDS',
+			// })
+			bidsDoc.get().then((doc) => {
+				// перенести в exchange
+				if (doc.exists) {
+					dispatch({
+						type: 'GET_BIDS',
+						bids: Object.values(doc.data()).reverse()
+					});
+				}
+			});
+			userDoc.get().then((doc) => {
+				if (doc.exists) {
+					dispatch({
+						type: 'GET_USER_DATA',
+						data: doc.data(),
+						mail: mail
+					});
+				}
+			});
 		}
 	}, [mail, update]);
 
@@ -178,7 +201,7 @@ const User = () => {
 			) : param === '?tasks' ? (
 				<Tasks tasks={tasks} setUpdate={setUpdate} />
 			) : param === '?exchange' ? (
-				<Exchange />
+				<Exchange data={data} mail={mail} setUpdate={setUpdate} />
 			) : (
 				<></>
 			)}

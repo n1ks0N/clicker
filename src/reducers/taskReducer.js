@@ -24,7 +24,7 @@ const taskReducer = (state = initialState, action) => {
 	}
 };
 
-export const GetUserTasksActionCreator = (task) => ({
+export const GetUserTaskActionCreator = (task) => ({
 	type: 'GET_USER_TASK',
 	task: task
 });

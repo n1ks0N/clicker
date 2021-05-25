@@ -14,7 +14,7 @@ const Clicks = () => {
 	const [observer, setObserver] = useState(false); // отслеживает выполнение заданий
 	const [sumTime, setSumTime] = useState(1); // считает время, проводимое на ссылках из заданий
 	const tasksDB = fb.firestore().collection('tasks');
-	const docRef = mail ? fb.firestore().collection('users').doc(`${mail}`) : '';
+	const userDoc = mail ? fb.firestore().collection('users').doc(`${mail}`) : '';
 	window.onfocus = () => {
 		if (observer) {
 			setObserver(false);
@@ -100,9 +100,9 @@ const Clicks = () => {
 					}
 				})
 				.then(() => {
-					docRef.get().then((doc) => {
+					userDoc.get().then((doc) => {
 						if (doc.exists) {
-							docRef.set(
+							userDoc.set(
 								{
 									clicks: doc.data().clicks + Number(category)
 								},

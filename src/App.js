@@ -16,6 +16,7 @@ const App = () => {
 	const activeReferrer = useLocation().search.split('=')[1];
 
 	const [data, setData] = useState(null); // jsonbin: рекламный контент, админ-панель
+
 	useLayoutEffect(() => {
 		// начилие реферала
 		if (activeReferrer) {

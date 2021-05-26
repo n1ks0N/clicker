@@ -19,7 +19,7 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 							{
 								allow_money: doc.data().allow_money - vip[lvl].price,
 								vip: Number(lvl) + 1,
-								// lvl: Number(lvl) + 1,
+								lvl: Number(lvl) + 1,
 								date: new Date(Date.now() + 86400000 * vip[lvl].days)
 							},
 							{ merge: true }

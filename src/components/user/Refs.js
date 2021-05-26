@@ -68,7 +68,7 @@ const Refs = ({ data, mail }) => {
 					</tr>
 				</tbody>
 			</table>
-			<p>Получено с рефералов: {data.recd}</p>
+			<p>Получено с рефералов: {data.recd} ₽</p>
 		</>
 	);
 };

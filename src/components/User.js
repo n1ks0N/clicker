@@ -106,7 +106,6 @@ const User = () => {
 			// userDoc.set({
 			//   lvl: data.vip,
 			//   date: data.vip > 3 ? new Date(Date.now() + day * 90) : new Date(Date.now() + day * 30),
-			//   purchases: data.purchases + data.vip * 100
 			// }, {
 			//   merge: true
 			// })

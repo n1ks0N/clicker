@@ -7,6 +7,7 @@ import { AuthContext } from './Auth.js';
 const Sign = ({ history }) => {
 	const { user } = useSelector((store) => store);
 	const [errorMessage, setErrorMessage] = useState('');
+	const usersDB = fb.firestore().collection('users');
 	const handleSign = useCallback(
 		async (e) => {
 			e.preventDefault();
@@ -36,21 +37,68 @@ const Sign = ({ history }) => {
 						});
 					})
 					.then(() => {
-						if (user.referrer) {
-							// usersRef
-							// 	.doc(`${user.referrer}`)
-							// 	.get()
-							// 	.then((doc) => {
-							// 		usersRef.doc(`${user.referrer}`).set(
-							// 			{
-							// 				refs: ++doc.data().refs
-							// 			},
-							// 			{ merge: true }
-							// 		);
-							// 	});
+						if (user.activeReferrer) {
+							let referrer = user.activeReferrer
+							usersDB.doc(`${referrer}`).get().then((doc) => {
+								if (doc.exists) {
+									let refs = doc.data().refs
+									refs[0].count += 1
+									usersDB.doc(`${referrer}`).set({
+										refs: refs,
+									}, { merge: true })
+									if (referrer) {
+										referrer = doc.data().referrer
+										usersDB.doc(`${referrer}`).get().then((doc) => {
+											if (doc.exists) {
+												refs = doc.data().refs
+												refs[1].count += 1
+												usersDB.doc(`${referrer}`).set({
+													refs: refs,
+												}, { merge: true })
+												if (doc.data().referrer) {
+													referrer = doc.data().referrer
+													usersDB.doc(`${referrer}`).get().then((doc) => {
+														if (doc.exists) {
+															refs = doc.data().refs
+															refs[2].count += 1
+															usersDB.doc(`${referrer}`).set({
+																refs: refs,
+															}, { merge: true })
+															if (doc.data().referrer) {
+																referrer = doc.data().referrer
+																usersDB.doc(`${referrer}`).get().then((doc) => {
+																	if (doc.exists) {
+																		refs = doc.data().refs
+																		refs[3].count += 1
+																		usersDB.doc(`${referrer}`).set({
+																			refs: refs,
+																		}, { merge: true })
+																		if (doc.data().referrer) {
+																			referrer = doc.data().referrer
+																			usersDB.doc(`${referrer}`).get().then((doc) => {
+																				if (doc.exists) {
+																					refs = doc.data().refs
+																					refs[4].count += 1
+																					usersDB.doc(`${referrer}`).set({
+																						refs: refs,
+																					}, { merge: true })
+																				}
+																			})
+																		}
+																	}
+																})
+															}
+														}
+													})
+												}
+											}
+										})
+									}
+								}
+							})
 						}
 					});
-				history.push('/user');
+				history.push('/user?profile');
 			} catch (error) {
 				switch (error.code) {
 					case 'auth/email-already-in-use':

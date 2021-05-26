@@ -3,54 +3,13 @@ import { fb } from '../../utils/constants/firebase';
 import { vip } from '../../utils/constants/const.json';
 
 const MoreClicks = ({ data, mail, setUpdate }) => {
-	const [ref, setRef] = useState(mail);
-	const [refStep, setRefStep] = useState(false);
-	const [level, setLevel] = useState(false);
 	const usersDB = fb.firestore().collection('users');
 	const docRef = mail
 		? fb.firestore().collection('users').doc(`${mail}`)
 		: false;
-	useEffect(() => {
-		if (mail) {
-			docRef.get().then((doc) => {
-				if (doc.exists && doc.data().referrer) {
-					setRef(doc.data().referrer);
-				}
-			});
-		}
-	}, [mail]);
-	useEffect(
-		() => {
-			if (refStep < 5 && ref && level) {
-				console.log(refStep, ref, level);
-				usersDB
-					.doc(`${ref}`)
-					.get()
-					.then((doc) => {
-						if (doc.exists) {
-							doc.data().referrer ? setRef(doc.data().referrer) : setRefStep(5);
-							const refs = doc.data().refs;
-							refs[refStep].sum += Number(vip[level].price);
-							setRefStep((prev) => prev + 1);
-							usersDB.doc(`${ref}`).set(
-								{
-									allow_money: doc.data().allow_money + vip[level].price * 0.1,
-									recd: doc.data().recd + vip[level].price,
-									refs: refs
-								},
-								{ merge: true }
-							);
-						}
-					});
-			}
-		},
-		[ref],
-		[refStep]
-	);
 	const buy = ({ id }) => {
 		const lvl = id.split('/')[0];
-		setLevel(lvl);
-		setRefStep(0);
+		// let refs;
 		if (data.allow_money > Number(vip[lvl].price) && data.lvl === 0) {
 			docRef
 				.get()
@@ -64,7 +23,77 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 								date: new Date(Date.now() + 86400000 * vip[lvl].days)
 							},
 							{ merge: true }
-						);
+						); // дальше говнокод; необходимо написать цикл вложенных асинхронных запросов, зависящих от предыдущего результата
+						if (doc.data().referrer) {
+							let referrer = doc.data().referrer
+							usersDB.doc(`${referrer}`).get().then((doc) => {
+								if (doc.exists) {
+									let refs = doc.data().refs
+									refs[0].sum += vip[lvl].price * .1
+									usersDB.doc(`${referrer}`).set({
+										allow_money: doc.data().allow_money + vip[lvl].price * .1,
+										refs: refs,
+										recd: doc.data().recd + vip[lvl].price * .1
+									}, { merge: true })
+									if (doc.data().referrer) {
+										referrer = doc.data().referrer
+										usersDB.doc(`${referrer}`).get().then((doc) => {
+											if (doc.exists) {
+												refs = doc.data().refs
+												refs[1].sum += vip[lvl].price * .1
+												usersDB.doc(`${referrer}`).set({
+													allow_money: doc.data().allow_money + vip[lvl].price * .1,
+													refs: refs,
+													recd: doc.data().recd + vip[lvl].price * .1
+												}, { merge: true })
+												if (doc.data().referrer) {
+													referrer = doc.data().referrer
+													usersDB.doc(`${referrer}`).get().then((doc) => {
+														if (doc.exists) {
+															refs = doc.data().refs
+															refs[2].sum += vip[lvl].price * .1
+															usersDB.doc(`${referrer}`).set({
+																allow_money: doc.data().allow_money + vip[lvl].price * .1,
+																refs: refs,
+																recd: doc.data().recd + vip[lvl].price * .1
+															}, { merge: true })
+															if (doc.data().referrer) {
+																referrer = doc.data().referrer
+																usersDB.doc(`${referrer}`).get().then((doc) => {
+																	if (doc.exists) {
+																		refs = doc.data().refs
+																		refs[3].sum += vip[lvl].price * .1
+																		usersDB.doc(`${referrer}`).set({
+																			allow_money: doc.data().allow_money + vip[lvl].price * .1,
+																			refs: refs,
+																			recd: doc.data().recd + vip[lvl].price * .1
+																		}, { merge: true })
+																		if (doc.data().referrer) {
+																			referrer = doc.data().referrer
+																			usersDB.doc(`${referrer}`).get().then((doc) => {
+																				if (doc.exists) {
+																					refs = doc.data().refs
+																					refs[4].sum += vip[lvl].price * .1
+																					usersDB.doc(`${referrer}`).set({
+																						allow_money: doc.data().allow_money + vip[lvl].price * .1,
+																						refs: refs,
+																						recd: doc.data().recd + vip[lvl].price * .1
+																					}, { merge: true })
+																				}
+																			})
+																		}
+																	}
+																})
+															}
+														}
+													})
+												}
+											}
+										})
+									}
+								}
+							})
+						}
 					}
 				})
 				.then(() => {

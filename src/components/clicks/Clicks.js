@@ -41,14 +41,16 @@ const Clicks = () => {
 	}, [observer, sumTime]);
 
 	const clickDone = ({ id, href }) => {
-		setObserver(true);
-		const taskId = id.split('/')[0];
-		if (completeUrls[0] === taskId) {
-			if (!completeUrls.some((val) => val.id === id))
-				setCompleteUrls((prev) => [...prev, { id: id, href: href }]);
-		} else {
-			setCompleteUrls([taskId, { id: id, href: href }]);
-			setSumTime(15);
+		if (mail) {
+			setObserver(true);
+			const taskId = id.split('/')[0];
+			if (completeUrls[0] === taskId) {
+				if (!completeUrls.some((val) => val.id === id))
+					setCompleteUrls((prev) => [...prev, { id: id, href: href }]);
+			} else {
+				setCompleteUrls([taskId, { id: id, href: href }]);
+				setSumTime(15);
+			}
 		}
 	};
 	const report = ({ id }) => {
@@ -143,7 +145,7 @@ const Clicks = () => {
 									<p>Выполнений: {data.spent_clicks / category}</p>
 									<p>
 										Осталось:{' '}
-										{(data.total_clicks - data.spent_clicks) / category}
+										{Math.floor((data.total_clicks - data.spent_clicks) / category)}
 									</p>
 									{data.urls.map((link, i) => (
 										<a

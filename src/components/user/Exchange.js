@@ -115,7 +115,8 @@ const Exchange = ({ data, mail, setUpdate }) => {
 								// деактивация задания
 								[key]: firebase.firestore.FieldValue.delete()
 							});
-							userDoc.get().then((doc) => { // взаимодействтия с покупателем
+							userDoc.get().then((doc) => {
+								// взаимодействтия с покупателем
 								if (doc.exists) {
 									userDoc.set(
 										{
@@ -146,7 +147,7 @@ const Exchange = ({ data, mail, setUpdate }) => {
 					}
 				}
 			})
-			.then(() => setUpdate(prev => !prev));
+			.then(() => setUpdate((prev) => !prev));
 	};
 	return (
 		<>

@@ -25,74 +25,122 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 							{ merge: true }
 						); // дальше говнокод; необходимо написать цикл вложенных асинхронных запросов, зависящих от предыдущего результата
 						if (doc.data().referrer) {
-							let referrer = doc.data().referrer
-							usersDB.doc(`${referrer}`).get().then((doc) => {
-								if (doc.exists) {
-									let refs = doc.data().refs
-									refs[0].sum += vip[lvl].price * .1
-									usersDB.doc(`${referrer}`).set({
-										allow_money: doc.data().allow_money + vip[lvl].price * .1,
-										refs: refs,
-										recd: doc.data().recd + vip[lvl].price * .1
-									}, { merge: true })
-									if (doc.data().referrer) {
-										referrer = doc.data().referrer
-										usersDB.doc(`${referrer}`).get().then((doc) => {
-											if (doc.exists) {
-												refs = doc.data().refs
-												refs[1].sum += vip[lvl].price * .1
-												usersDB.doc(`${referrer}`).set({
-													allow_money: doc.data().allow_money + vip[lvl].price * .1,
-													refs: refs,
-													recd: doc.data().recd + vip[lvl].price * .1
-												}, { merge: true })
-												if (doc.data().referrer) {
-													referrer = doc.data().referrer
-													usersDB.doc(`${referrer}`).get().then((doc) => {
-														if (doc.exists) {
-															refs = doc.data().refs
-															refs[2].sum += vip[lvl].price * .1
-															usersDB.doc(`${referrer}`).set({
-																allow_money: doc.data().allow_money + vip[lvl].price * .1,
+							let referrer = doc.data().referrer;
+							usersDB
+								.doc(`${referrer}`)
+								.get()
+								.then((doc) => {
+									if (doc.exists) {
+										let refs = doc.data().refs;
+										refs[0].sum += vip[lvl].price * 0.1;
+										usersDB.doc(`${referrer}`).set(
+											{
+												allow_money:
+													doc.data().allow_money + vip[lvl].price * 0.1,
+												refs: refs,
+												recd: doc.data().recd + vip[lvl].price * 0.1
+											},
+											{ merge: true }
+										);
+										if (doc.data().referrer) {
+											referrer = doc.data().referrer;
+											usersDB
+												.doc(`${referrer}`)
+												.get()
+												.then((doc) => {
+													if (doc.exists) {
+														refs = doc.data().refs;
+														refs[1].sum += vip[lvl].price * 0.1;
+														usersDB.doc(`${referrer}`).set(
+															{
+																allow_money:
+																	doc.data().allow_money + vip[lvl].price * 0.1,
 																refs: refs,
-																recd: doc.data().recd + vip[lvl].price * .1
-															}, { merge: true })
-															if (doc.data().referrer) {
-																referrer = doc.data().referrer
-																usersDB.doc(`${referrer}`).get().then((doc) => {
+																recd: doc.data().recd + vip[lvl].price * 0.1
+															},
+															{ merge: true }
+														);
+														if (doc.data().referrer) {
+															referrer = doc.data().referrer;
+															usersDB
+																.doc(`${referrer}`)
+																.get()
+																.then((doc) => {
 																	if (doc.exists) {
-																		refs = doc.data().refs
-																		refs[3].sum += vip[lvl].price * .1
-																		usersDB.doc(`${referrer}`).set({
-																			allow_money: doc.data().allow_money + vip[lvl].price * .1,
-																			refs: refs,
-																			recd: doc.data().recd + vip[lvl].price * .1
-																		}, { merge: true })
+																		refs = doc.data().refs;
+																		refs[2].sum += vip[lvl].price * 0.1;
+																		usersDB.doc(`${referrer}`).set(
+																			{
+																				allow_money:
+																					doc.data().allow_money +
+																					vip[lvl].price * 0.1,
+																				refs: refs,
+																				recd:
+																					doc.data().recd + vip[lvl].price * 0.1
+																			},
+																			{ merge: true }
+																		);
 																		if (doc.data().referrer) {
-																			referrer = doc.data().referrer
-																			usersDB.doc(`${referrer}`).get().then((doc) => {
-																				if (doc.exists) {
-																					refs = doc.data().refs
-																					refs[4].sum += vip[lvl].price * .1
-																					usersDB.doc(`${referrer}`).set({
-																						allow_money: doc.data().allow_money + vip[lvl].price * .1,
-																						refs: refs,
-																						recd: doc.data().recd + vip[lvl].price * .1
-																					}, { merge: true })
-																				}
-																			})
+																			referrer = doc.data().referrer;
+																			usersDB
+																				.doc(`${referrer}`)
+																				.get()
+																				.then((doc) => {
+																					if (doc.exists) {
+																						refs = doc.data().refs;
+																						refs[3].sum += vip[lvl].price * 0.1;
+																						usersDB.doc(`${referrer}`).set(
+																							{
+																								allow_money:
+																									doc.data().allow_money +
+																									vip[lvl].price * 0.1,
+																								refs: refs,
+																								recd:
+																									doc.data().recd +
+																									vip[lvl].price * 0.1
+																							},
+																							{ merge: true }
+																						);
+																						if (doc.data().referrer) {
+																							referrer = doc.data().referrer;
+																							usersDB
+																								.doc(`${referrer}`)
+																								.get()
+																								.then((doc) => {
+																									if (doc.exists) {
+																										refs = doc.data().refs;
+																										refs[4].sum +=
+																											vip[lvl].price * 0.1;
+																										usersDB
+																											.doc(`${referrer}`)
+																											.set(
+																												{
+																													allow_money:
+																														doc.data()
+																															.allow_money +
+																														vip[lvl].price *
+																															0.1,
+																													refs: refs,
+																													recd:
+																														doc.data().recd +
+																														vip[lvl].price * 0.1
+																												},
+																												{ merge: true }
+																											);
+																									}
+																								});
+																						}
+																					}
+																				});
 																		}
 																	}
-																})
-															}
+																});
 														}
-													})
-												}
-											}
-										})
+													}
+												});
+										}
 									}
-								}
-							})
+								});
 						}
 					}
 				})

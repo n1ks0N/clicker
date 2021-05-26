@@ -145,7 +145,9 @@ const Clicks = () => {
 									<p>Выполнений: {data.spent_clicks / category}</p>
 									<p>
 										Осталось:{' '}
-										{Math.floor((data.total_clicks - data.spent_clicks) / category)}
+										{Math.floor(
+											(data.total_clicks - data.spent_clicks) / category
+										)}
 									</p>
 									{data.urls.map((link, i) => (
 										<a

@@ -38,64 +38,96 @@ const Sign = ({ history }) => {
 					})
 					.then(() => {
 						if (user.activeReferrer) {
-							let referrer = user.activeReferrer
-							usersDB.doc(`${referrer}`).get().then((doc) => {
-								if (doc.exists) {
-									let refs = doc.data().refs
-									refs[0].count += 1
-									usersDB.doc(`${referrer}`).set({
-										refs: refs,
-									}, { merge: true })
-									if (referrer) {
-										referrer = doc.data().referrer
-										usersDB.doc(`${referrer}`).get().then((doc) => {
-											if (doc.exists) {
-												refs = doc.data().refs
-												refs[1].count += 1
-												usersDB.doc(`${referrer}`).set({
-													refs: refs,
-												}, { merge: true })
-												if (doc.data().referrer) {
-													referrer = doc.data().referrer
-													usersDB.doc(`${referrer}`).get().then((doc) => {
-														if (doc.exists) {
-															refs = doc.data().refs
-															refs[2].count += 1
-															usersDB.doc(`${referrer}`).set({
-																refs: refs,
-															}, { merge: true })
-															if (doc.data().referrer) {
-																referrer = doc.data().referrer
-																usersDB.doc(`${referrer}`).get().then((doc) => {
+							let referrer = user.activeReferrer;
+							usersDB
+								.doc(`${referrer}`)
+								.get()
+								.then((doc) => {
+									if (doc.exists) {
+										let refs = doc.data().refs;
+										refs[0].count += 1;
+										usersDB.doc(`${referrer}`).set(
+											{
+												refs: refs
+											},
+											{ merge: true }
+										);
+										if (referrer) {
+											referrer = doc.data().referrer;
+											usersDB
+												.doc(`${referrer}`)
+												.get()
+												.then((doc) => {
+													if (doc.exists) {
+														refs = doc.data().refs;
+														refs[1].count += 1;
+														usersDB.doc(`${referrer}`).set(
+															{
+																refs: refs
+															},
+															{ merge: true }
+														);
+														if (doc.data().referrer) {
+															referrer = doc.data().referrer;
+															usersDB
+																.doc(`${referrer}`)
+																.get()
+																.then((doc) => {
 																	if (doc.exists) {
-																		refs = doc.data().refs
-																		refs[3].count += 1
-																		usersDB.doc(`${referrer}`).set({
-																			refs: refs,
-																		}, { merge: true })
+																		refs = doc.data().refs;
+																		refs[2].count += 1;
+																		usersDB.doc(`${referrer}`).set(
+																			{
+																				refs: refs
+																			},
+																			{ merge: true }
+																		);
 																		if (doc.data().referrer) {
-																			referrer = doc.data().referrer
-																			usersDB.doc(`${referrer}`).get().then((doc) => {
-																				if (doc.exists) {
-																					refs = doc.data().refs
-																					refs[4].count += 1
-																					usersDB.doc(`${referrer}`).set({
-																						refs: refs,
-																					}, { merge: true })
-																				}
-																			})
+																			referrer = doc.data().referrer;
+																			usersDB
+																				.doc(`${referrer}`)
+																				.get()
+																				.then((doc) => {
+																					if (doc.exists) {
+																						refs = doc.data().refs;
+																						refs[3].count += 1;
+																						usersDB.doc(`${referrer}`).set(
+																							{
+																								refs: refs
+																							},
+																							{ merge: true }
+																						);
+																						if (doc.data().referrer) {
+																							referrer = doc.data().referrer;
+																							usersDB
+																								.doc(`${referrer}`)
+																								.get()
+																								.then((doc) => {
+																									if (doc.exists) {
+																										refs = doc.data().refs;
+																										refs[4].count += 1;
+																										usersDB
+																											.doc(`${referrer}`)
+																											.set(
+																												{
+																													refs: refs
+																												},
+																												{ merge: true }
+																											);
+																									}
+																								});
+																						}
+																					}
+																				});
 																		}
 																	}
-																})
-															}
+																});
 														}
-													})
-												}
-											}
-										})
+													}
+												});
+										}
 									}
-								}
-							})
+								});
 						}
 					});
 				history.push('/user?profile');

@@ -37,7 +37,7 @@ const Sign = ({ history }) => {
 						});
 					})
 					.then(() => {
-						if (user.activeReferrer) {
+						if (user.activeReferrer) { // дальше говнокод; необходимо написать цикл вложенных асинхронных запросов, зависящих от предыдущего результата
 							let referrer = user.activeReferrer;
 							usersDB
 								.doc(`${referrer}`)

@@ -64,10 +64,10 @@ const Refs = ({ data, mail }) => {
 						<td className="table-refs__td table-refs__sum">0</td>
 						<td className="table-refs__td table-refs__sum">0</td>
 						<td className="table-refs__td table-refs__sum">0</td>
-						<td className="table-refs__td">{sumRefs}</td>
 					</tr>
 				</tbody>
 			</table>
+			<p>Общие траты рефералов: {sumRefs} ₽</p>
 			<p>Получено с рефералов: {data.recd} ₽</p>
 		</>
 	);

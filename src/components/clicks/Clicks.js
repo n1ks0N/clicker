@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fb } from '../../utils/constants/firebase';
 
+import './Clicks.css'
+
 const Clicks = () => {
 	const {
 		user: { mail }
@@ -119,7 +121,7 @@ const Clicks = () => {
 	return (
 		<div>
 			<h1>Категория: {category} клика</h1>
-			<div>
+			<div className="clicks__wrapper">
 				{Object.values(tasks)
 					.reverse()
 					.map(
@@ -128,9 +130,10 @@ const Clicks = () => {
 								data.total_clicks > data.spent_clicks &&
 								data.total_clicks - data.spent_clicks >= category
 							) && (
-								<div key={i}>
-									<h3>{data.name}</h3>
-									<p>
+								<div key={i} className="card clicks__task">
+									<div className="card-body">
+									<h5 className="card-title">{data.name}</h5>
+									<h6 className="card-subtitle mb2 text-muted">
 										Автор:{' '}
 										{data.author.split('@')[0].split('').splice(0, 3).join('')}
 										...
@@ -141,35 +144,40 @@ const Clicks = () => {
 											.splice(0, 3)
 											.reverse()
 											.join('')}
-									</p>
-									<p>Выполнений: {data.spent_clicks / category}</p>
-									<p>
+									</h6>
+									<p className="card-text">Выполнений: {data.spent_clicks / category}</p>
+									<p className="card-text">
 										Осталось:{' '}
 										{Math.floor(
 											(data.total_clicks - data.spent_clicks) / category
-										)}
+											)}
 									</p>
 									{data.urls.map((link, i) => (
+										<div className="card__buttons">
 										<a
+											className="card-link"
 											href={link}
 											key={i}
 											target="_blank"
 											id={`${data.id}/${i}`}
 											onClick={(e) => clickDone(e.currentTarget)}
-										>
+											>
 											<button type="button" className="btn btn-primary">
 												Кликнуть
 											</button>
 										</a>
+										</div>
 									))}
+									<br />
 									<button
 										type="button"
 										id={`${data.id}/rep`}
 										className="btn btn-danger btn-sm"
 										onClick={(e) => report(e.target)}
-									>
+										>
 										Пожаловаться
 									</button>
+										</div>
 								</div>
 							)
 					)}

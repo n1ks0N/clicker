@@ -1,0 +1,22 @@
+.clicks__wrapper {
+  width: 100%;
+  height: 600px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.clicks__task {
+  width: 20rem;
+  min-height: 364px;  
+  margin: 25px 0;
+}
+.card__buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}

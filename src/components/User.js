@@ -204,14 +204,6 @@ const User = () => {
 			) : (
 				<></>
 			)}
-			<h4>Ваш уровень: {data.lvl}</h4>
-			{!!date && (
-				<p>
-					Уровень активен до:{' '}
-					{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}
-				</p>
-			)}
-			<p>Общая сумма пополней: {data.purchases} ₽</p>
 			<button
 				type="button"
 				className="btn btn-secondary btn-sm"

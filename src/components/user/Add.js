@@ -67,7 +67,7 @@ const Add = ({ data, mail, setUpdate }) => {
 							userDoc.set(
 								{
 									clicks:
-										doc.data().clicks - totalClicksValue * categoryValue.length
+										doc.data().clicks - 10 - totalClicksValue * categoryValue.length
 								},
 								{ merge: true }
 							);
@@ -88,7 +88,7 @@ const Add = ({ data, mail, setUpdate }) => {
 	return (
 		<>
 			<h2>Добавить задание</h2>
-			<h4>Кликов: {data.clicks}</h4>
+			<h4>Клики: {data.clicks}</h4>
 			<h5>Создать задание</h5>
 			<div>
 				<Input

@@ -152,7 +152,7 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 	return (
 		<>
 			<h2>Больше кликов</h2>
-			<h4>Кликов: {data.clicks}</h4>
+			<h4>Клики: {data.clicks}</h4>
 			<h4>Баланс: {data.allow_money} ₽</h4>
 			<p>1 вип ур 100 р + 50 % к кликам на 30 дней + 1000 кликов</p>
 			<button

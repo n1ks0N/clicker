@@ -46,17 +46,18 @@ const Profile = ({ data, mail, setUpdate }) => {
 		<>
 			<h2>Профиль</h2>
 			<h3>
-				{mail}{' '}
-				<span className="badge badge-primary" title="Уровень">
-					{data.lvl}
-				</span>
+				{mail}
 			</h3>
+			<h4>Уровень: <span className="badge badge-primary" title="Уровень">
+					{data.lvl}
+				</span></h4>
 			{!!data.date && (
 				<p>Уровень активен до: {`${new Date(data.date.seconds * 1000)}`}</p>
 			)}
-			<h4>Кликов: {data.clicks}</h4>
+			<h4>Клики: {data.clicks}</h4>
+			<h4>Баланс: {data.allow_money} ₽</h4>
 			<h4>Вывод средств</h4>
-			<p>Баланс: {data.allow_money} ₽</p>
+			<p>Получено: {data.recd} ₽</p>
 			<div className="row">
 				<div className="form-group">
 					<div className="input-group">
@@ -88,10 +89,10 @@ const Profile = ({ data, mail, setUpdate }) => {
 						</div>
 					</div>
 				</div>
-				<button type="button" className="btn btn-primary" onClick={withdrawal}>
+			</div>
+			<button type="button" className="btn btn-primary" onClick={withdrawal}>
 					Заказать вывод
 				</button>
-			</div>
 			<p>Всего выведено: {data.output_money} ₽</p>
 		</>
 	);

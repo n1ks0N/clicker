@@ -44,3 +44,7 @@ menu li:hover {
 .form-group {
   margin-bottom: 0;
 }
+
+.btn {
+  margin: 5px;
+}

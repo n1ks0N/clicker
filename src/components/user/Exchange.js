@@ -152,7 +152,7 @@ const Exchange = ({ data, mail, setUpdate }) => {
 	return (
 		<>
 			<h2>Биржа кликов</h2>
-			<h4>Кликов: {data.clicks}</h4>
+			<h4>Клики: {data.clicks}</h4>
 			<h4>Баланс: {data.allow_money} ₽</h4>
 			<h5>Мои клики</h5>
 			<div className="container">

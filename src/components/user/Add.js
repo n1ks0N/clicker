@@ -67,7 +67,9 @@ const Add = ({ data, mail, setUpdate }) => {
 							userDoc.set(
 								{
 									clicks:
-										doc.data().clicks - 10 - totalClicksValue * categoryValue.length
+										doc.data().clicks -
+										10 -
+										totalClicksValue * categoryValue.length
 								},
 								{ merge: true }
 							);

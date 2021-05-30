@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fb } from '../../utils/constants/firebase';
+import { vip } from '../../utils/constants/const.json';
 
-import './Clicks.css'
+import './Clicks.css';
 
 const Clicks = () => {
 	const {
-		user: { mail }
+		user: { data, mail }
 	} = useSelector((store) => store);
 	let { category } = useParams();
 	const [tasks, setTasks] = useState({});
@@ -79,7 +80,6 @@ const Clicks = () => {
 	};
 	useEffect(() => {
 		if (completeUrls.length - 1 === Number(category) && sumTime <= 0) {
-			console.log('yes');
 			setObserver(false);
 			setCompleteUrls([]);
 			document.title = 'Задание выполнено | Кликер';
@@ -106,9 +106,16 @@ const Clicks = () => {
 				.then(() => {
 					userDoc.get().then((doc) => {
 						if (doc.exists) {
+							let clicks = doc.data().clicks + Number(category);
+							let clicksRound = doc.data().clicks_round + Number(category);
+							if (doc.data().lvl > 0 && clicksRound >= 10) {
+								clicksRound -= 10;
+								clicks += 10 * (vip[data.lvl - 1].percent / 100);
+							}
 							userDoc.set(
 								{
-									clicks: doc.data().clicks + Number(category)
+									clicks: clicks,
+									clicks_round: clicksRound
 								},
 								{ merge: true }
 							);
@@ -132,52 +139,57 @@ const Clicks = () => {
 							) && (
 								<div key={i} className="card clicks__task">
 									<div className="card-body">
-									<h5 className="card-title">{data.name}</h5>
-									<h6 className="card-subtitle mb2 text-muted">
-										Автор:{' '}
-										{data.author.split('@')[0].split('').splice(0, 3).join('')}
-										...
-										{data.author
-											.split('@')[0]
-											.split('')
-											.reverse()
-											.splice(0, 3)
-											.reverse()
-											.join('')}
-									</h6>
-									<p className="card-text">Выполнений: {data.spent_clicks / category}</p>
-									<p className="card-text">
-										Осталось:{' '}
-										{Math.floor(
-											(data.total_clicks - data.spent_clicks) / category
+										<h5 className="card-title">{data.name}</h5>
+										<h6 className="card-subtitle mb2 text-muted">
+											Автор:{' '}
+											{data.author
+												.split('@')[0]
+												.split('')
+												.splice(0, 3)
+												.join('')}
+											...
+											{data.author
+												.split('@')[0]
+												.split('')
+												.reverse()
+												.splice(0, 3)
+												.reverse()
+												.join('')}
+										</h6>
+										<p className="card-text">
+											Выполнений: {data.spent_clicks / category}
+										</p>
+										<p className="card-text">
+											Осталось:{' '}
+											{Math.floor(
+												(data.total_clicks - data.spent_clicks) / category
 											)}
-									</p>
-									{data.urls.map((link, i) => (
-										<div className="card__buttons">
-										<a
-											className="card-link"
-											href={link}
-											key={i}
-											target="_blank"
-											id={`${data.id}/${i}`}
-											onClick={(e) => clickDone(e.currentTarget)}
-											>
-											<button type="button" className="btn btn-primary">
-												Кликнуть
-											</button>
-										</a>
-										</div>
-									))}
-									<br />
-									<button
-										type="button"
-										id={`${data.id}/rep`}
-										className="btn btn-danger btn-sm"
-										onClick={(e) => report(e.target)}
+										</p>
+										{data.urls.map((link, i) => (
+											<div className="card__buttons" key ={i}>
+												<a
+													className="card-link"
+													href={link}
+													target="_blank"
+													id={`${data.id}/${i}`}
+													onClick={(e) => clickDone(e.currentTarget)}
+												>
+													<button type="button" className="btn btn-primary">
+														Кликнуть
+													</button>
+												</a>
+											</div>
+										))}
+										<br />
+										<button
+											type="button"
+											id={`${data.id}/rep`}
+											className="btn btn-danger btn-sm"
+											onClick={(e) => report(e.target)}
 										>
-										Пожаловаться
-									</button>
-										</div>
+											Пожаловаться
+										</button>
+									</div>
 								</div>
 							)
 					)}

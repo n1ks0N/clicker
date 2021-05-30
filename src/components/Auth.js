@@ -24,6 +24,15 @@ export const AuthProvider = ({ children }) => {
 								data: doc.data(),
 								mail: user.email
 							});
+							if (Date.now() - doc.data().bonus.seconds * 1000 > 86400000) {
+								docRef.set(
+									{
+										bonus: new Date(),
+										clicks: doc.data().clicks + 5
+									},
+									{ merge: true }
+								);
+							}
 						} else {
 							// Пользователь незарегистрирован
 						}

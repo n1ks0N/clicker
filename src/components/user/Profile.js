@@ -45,12 +45,13 @@ const Profile = ({ data, mail, setUpdate }) => {
 	return (
 		<>
 			<h2>Профиль</h2>
-			<h3>
-				{mail}
-			</h3>
-			<h4>Уровень: <span className="badge badge-primary" title="Уровень">
+			<h3>{mail}</h3>
+			<h4>
+				Уровень:{' '}
+				<span className="badge badge-primary" title="Уровень">
 					{data.lvl}
-				</span></h4>
+				</span>
+			</h4>
 			{!!data.date && (
 				<p>Уровень активен до: {`${new Date(data.date.seconds * 1000)}`}</p>
 			)}
@@ -91,8 +92,8 @@ const Profile = ({ data, mail, setUpdate }) => {
 				</div>
 			</div>
 			<button type="button" className="btn btn-primary" onClick={withdrawal}>
-					Заказать вывод
-				</button>
+				Заказать вывод
+			</button>
 			<p>Всего выведено: {data.output_money} ₽</p>
 		</>
 	);

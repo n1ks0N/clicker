@@ -1,13 +1,13 @@
-import React, { useState, useLayoutEffect, useContext } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { urlAd, keyAd } from './utils/constants/api.json';
 import { Route, Switch, Link, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { fb } from './utils/constants/firebase';
+import { useDispatch } from 'react-redux';
 import Clicks from './components/clicks/Clicks';
+import Admin from './components/Admin/Admin'
+import User from './components/User';
 import { AuthProvider } from './components/Auth';
 import Login from './components/Login';
 import Sign from './components/Sign';
-import User from './components/User';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
@@ -24,7 +24,10 @@ const App = () => {
 				type: 'GET_REFERRER',
 				activeReferrer: activeReferrer
 			});
-		}
+		}let script = document.createElement('script');
+		script.src = 'https://yastatic.net/share2/share.js';
+		script.async = true;
+		document.body.appendChild(script);
 
 		// получение данных из jsonbin; преобладает рекламный контент
 		let req = new XMLHttpRequest();
@@ -51,10 +54,6 @@ const App = () => {
 					script.async = true;
 					document.body.appendChild(script);
 				}
-				let script = document.createElement('script');
-				script.src = 'https://yastatic.net/share2/share.js';
-				script.async = true;
-				document.body.appendChild(script);
 			}
 		};
 		req.open('GET', 'urlAd', true);
@@ -133,6 +132,7 @@ by https://github.com/n1ks0N
 				</div>
 				<AuthProvider>
 					<Switch>
+						<Route exact path="/admin" component={Admin} />
 						<Route exact path="/" />
 						<Route path="/clicks/:category" component={Clicks} />
 						<PrivateRoute path="/user" component={User} />
@@ -173,7 +173,7 @@ by https://github.com/n1ks0N
 				</div>
 			</footer>
 			<div
-				className="ya-share2"
+				className="ya-share2 ya-share"
 				data-curtain
 				data-size="l"
 				data-shape="round"

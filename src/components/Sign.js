@@ -22,8 +22,11 @@ const Sign = ({ history }) => {
 							output_money: 0,
 							allow_money: 0,
 							clicks: 0,
+							clicks_round: 0,
 							date: false,
+							bonus: new Date(),
 							lvl: 0,
+							vip: 0,
 							recd: 0,
 							refs: [
 								{ count: 0, sum: 0 },
@@ -32,12 +35,12 @@ const Sign = ({ history }) => {
 								{ count: 0, sum: 0 },
 								{ count: 0, sum: 0 }
 							],
-							vip: 0,
 							referrer: user.activeReferrer ? user.activeReferrer : false
 						});
 					})
 					.then(() => {
-						if (user.activeReferrer) { // дальше говнокод; необходимо написать цикл вложенных асинхронных запросов, зависящих от предыдущего результата
+						if (user.activeReferrer) {
+							// дальше говнокод; необходимо написать цикл вложенных асинхронных запросов, зависящих от предыдущего результата
 							let referrer = user.activeReferrer;
 							usersDB
 								.doc(`${referrer}`)

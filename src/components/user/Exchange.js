@@ -115,33 +115,36 @@ const Exchange = ({ data, mail, setUpdate }) => {
 								// деактивация задания
 								[key]: firebase.firestore.FieldValue.delete()
 							});
-							userDoc.get().then((doc) => {
-								// взаимодействтия с покупателем
-								if (doc.exists) {
-									userDoc.set(
-										{
-											clicks: doc.data().clicks + clicks,
-											allow_money: doc.data().allow_money - money
-										},
-										{ merge: true }
-									);
-								}
-							});
-							usersDB // взаимодействия с продавцом
-								.doc(`${author}`)
+							userDoc
 								.get()
 								.then((doc) => {
+									// взаимодействтия с покупателем
 									if (doc.exists) {
-										fb.firestore()
-											.collection('users')
-											.doc(`${author}`)
-											.set(
-												{
-													allow_money: doc.data().allow_money + money
-												},
-												{ merge: true }
-											);
+										console.log(doc.data().allow_money);
+										userDoc.set(
+											{
+												clicks: doc.data().clicks + clicks,
+												allow_money: doc.data().allow_money - money
+											},
+											{ merge: true }
+										);
 									}
+								})
+								.then(() => {
+									usersDB // взаимодействия с продавцом
+										.doc(`${author}`)
+										.get()
+										.then((doc) => {
+											if (doc.exists) {
+												console.log(doc.data().allow_money);
+												usersDB.doc(`${author}`).set(
+													{
+														allow_money: doc.data().allow_money + money
+													},
+													{ merge: true }
+												);
+											}
+										});
 								});
 						}
 					}
@@ -173,7 +176,9 @@ const Exchange = ({ data, mail, setUpdate }) => {
 								</div>
 								<div className="col">{data.count}</div>
 								<div className="col">{data.cost}</div>
-								<div className="col">{data.cost / data.count}</div>
+								<div className="col">
+									{Number((data.cost / data.count).toFixed(2))}
+								</div>
 								<div className="col">{`${new Date(
 									data.date.seconds * 1000
 								)}`}</div>
@@ -290,7 +295,9 @@ const Exchange = ({ data, mail, setUpdate }) => {
 						</div>
 						<div className="col">{data.count}</div>
 						<div className="col">{data.cost}</div>
-						<div className="col">{data.cost / data.count}</div>
+						<div className="col">
+							{Number((data.cost / data.count).toFixed(2))}
+						</div>
 						<div className="col">{`${new Date(data.date.seconds * 1000)}`}</div>
 						<div className="col">
 							<button

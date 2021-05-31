@@ -29,11 +29,11 @@ const Refs = ({ data, mail }) => {
 			});
 		}
 	}, [data.refs]);
-	const copy = (e) => {
-		e.persist();
-		e.target.select();
-		navigator.clipboard.writeText(e.target.value);
-	};
+	// const copy = (e) => {
+	// 	e.persist();
+	// 	e.target.select();
+	// 	navigator.clipboard.writeText(e.target.value);
+	// };
 	return (
 		<>
 			<h2>Партнёрская программа</h2>

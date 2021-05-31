@@ -24,7 +24,7 @@ const App = () => {
 				type: 'GET_REFERRER',
 				activeReferrer: activeReferrer
 			});
-		}let script = document.createElement('script');
+		} let script = document.createElement('script');
 		script.src = 'https://yastatic.net/share2/share.js';
 		script.async = true;
 		document.body.appendChild(script);
@@ -36,6 +36,10 @@ const App = () => {
 			if (req.readyState == XMLHttpRequest.DONE) {
 				const result = JSON.parse(req.responseText).record;
 				setData(() => result);
+				dispatch({
+					type: 'GET_INFO',
+					info: result.info
+				})
 				for (let i = 0; i < result.header.banners.length; i++) {
 					let script = document.createElement('script');
 					script.src = result.header.banners[i].div.split(`'`)[3];
@@ -56,7 +60,7 @@ const App = () => {
 				}
 			}
 		};
-		req.open('GET', 'urlAd', true);
+		req.open('GET', urlAd, true);
 		req.setRequestHeader('X-Master-Key', keyAd);
 		req.send();
 
@@ -72,6 +76,7 @@ Powered on ReactJS
 by https://github.com/n1ks0N
 			`);
 	}, []);
+	console.log(data)
 	return (
 		<>
 			<div className="bg"></div>
@@ -132,8 +137,16 @@ by https://github.com/n1ks0N
 				</div>
 				<AuthProvider>
 					<Switch>
+						<Route exact path="/">
+							<div className="app">
+								{!!data &&
+									data.info.texts.map((data, i) =>
+										!!(data.place === '/') && <div key={i} dangerouslySetInnerHTML={{ __html: data.result }} />
+									)
+								}
+							</div>
+						</Route>
 						<Route exact path="/admin" component={Admin} />
-						<Route exact path="/" />
 						<Route path="/clicks/:category" component={Clicks} />
 						<PrivateRoute path="/user" component={User} />
 						<Route path="/login" component={Login} />

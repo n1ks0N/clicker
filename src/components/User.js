@@ -17,9 +17,10 @@ const User = () => {
 	const dispatch = useDispatch();
 	const {
 		user: { data, mail },
-		tasks: { tasks }
+		tasks: { tasks },
+		info: { info }
 	} = useSelector((store) => store);
-
+	console.log(info)
 	const [update, setUpdate] = useState(false);
 
 	const tasksDB = fb.firestore().collection('tasks');
@@ -130,6 +131,10 @@ const User = () => {
 				<Exchange data={data} mail={mail} setUpdate={setUpdate} />
 			) : (
 				<></>
+			)}
+			{!!info.texts && info.texts.map((data, i) => 
+				!!(data.place === param) && 
+				<p key={i}>{data.text}</p>
 			)}
 			<button
 				type="button"

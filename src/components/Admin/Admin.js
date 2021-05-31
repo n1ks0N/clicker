@@ -8,9 +8,15 @@ import './Admin.css';
 
 const Admin = () => {
 	const [data, setData] = useState('');
+	const [sender, setSender] = useState(false)
+
 	const [user, setUser] = useState('')
-	const [value, setValue] = useState(0)
-	const [tasks, setTasks] = useState([{ author: 'mail', urls: ['.com'] }])
+	const [value, setValue] = useState(0) // начисления
+	const [tasks, setTasks] = useState([]) // задания с жалобами
+	const [sumRefs, setSumRefs] = useState(0)
+	const [outputMoney, setOutputMoney] = useState(-1)
+	const [allowMoney, setAllowMoney] = useState(-1)
+
 	const typeRef = useRef('');
 	const logRef = useRef('');
 	const passRef = useRef('');
@@ -71,6 +77,31 @@ const Admin = () => {
 			};
 		});
 	};
+	const changeList = ({ param, name }) => {
+		let value = param.replaceAll(`"`, `'`); // все кавычки заменяются на одиночные
+		value = value.replaceAll('`', "'"); // чтобы избежать бага при конвертировании в JSON
+		const section = name.split('.')[0];
+		const category = name.split('.')[1];
+		const arr = value.split('\n')
+		setData(prev => ({
+			...prev,
+			[section]: {
+				...prev[section],
+				[category]: arr
+			}
+		}))
+	}
+	const changeTime = ({ param, name }) => {
+		const section = name.split('.')[0];
+		const category = name.split('.')[1];
+		setData(prev => ({
+			...prev,
+			[section]: {
+				...prev[section],
+				[category]: param
+			}
+		}))
+	}
 	const del = ({ target: { id } }) => {
 		const section = id.split('.')[0];
 		const category = id.split('.')[1];
@@ -149,10 +180,27 @@ const Admin = () => {
 				}
 			})
 	}
+	const getRefs = () => {
+		fb.firestore().collection('users').doc(`${user}`).get().then((doc) => {
+			// рефералы
+			setSumRefs(0);
+			const countElements = document.querySelectorAll('.table-refs__count');
+			const sumElements = document.querySelectorAll('.table-refs__sum');
+			if (doc.exists) {
+				doc.data().refs.forEach(({ count, sum }, i) => {
+					countElements[i].textContent = count;
+					sumElements[i].textContent = sum;
+					setSumRefs((prev) => prev + sum);
+				});
+				setOutputMoney(doc.data().output_money)
+				setAllowMoney(doc.data().allow_money)
+			}
+		});
+	}
 
 	const send = () => {
 		const infoTexts = data.info.texts.map((data) => { // замена 
-			let result = ''; 
+			let result = '';
 			data.text.replace(
 				/((?:https?:\/\/|ftps?:\/\/|\bwww\.)(?:(?![.,?!;:()]*(?:\s|$))[^\s]){2,})|(\n+|(?:(?!(?:https?:\/\/|ftp:\/\/|\bwww\.)(?:(?![.,?!;:()]*(?:\s|$))[^\s]){2,}).)+)/gim,
 				(m, link, text) => {
@@ -161,12 +209,11 @@ const Admin = () => {
 							? `<a href=${(link[0] === 'w' ? '//' : '') + link} key=${result.length
 							} target='_blank'>${link}</a>`
 							: text
-					
 				}
 			);
 			return {
-				text: result,
-				place: data.place
+				...data,
+				result: result
 			}
 		})
 		setData(prev => ({
@@ -176,13 +223,18 @@ const Admin = () => {
 				texts: infoTexts
 			}
 		}))
-		console.log(data)
-		// let req = new XMLHttpRequest();
-		// req.open('PUT', urlAd, true);
-		// req.setRequestHeader('Content-Type', 'application/json');
-		// req.setRequestHeader('X-Master-Key', keyAd);
-		// req.send(JSON.stringify(data));
+		setSender(true)
 	};
+	useEffect(() => {
+		if (sender) {
+			setSender(false)
+			let req = new XMLHttpRequest();
+			req.open('PUT', urlAd, true);
+			req.setRequestHeader('Content-Type', 'application/json');
+			req.setRequestHeader('X-Master-Key', keyAd);
+			req.send(JSON.stringify(data));
+		}
+	}, [sender])
 	return (
 		<div className="">
 			<div className="login">
@@ -412,6 +464,54 @@ const Admin = () => {
 							Добавить
 						</button>
 					</center>
+					<h3>Тексты и ссылки</h3>
+					{Object.values(data.info.texts).map((data, i) => <div key={i}>
+						<InputText
+							text={data.place.split('?')[1]}
+							type="text"
+							value={data.text}
+							name='info.texts.text'
+							change={change}
+							i={i}
+							textarea={true}
+						/>
+					</div>)}
+					<h3>Блокировки</h3>
+					<InputText
+						text="Список заблокированных пользователей (почты)"
+						type="text"
+						value={data.info.mails.join('\n')}
+						name="info.mails"
+						i="0"
+						textarea={true}
+						change={changeList}
+					/>
+					<InputText
+						text="Список заблокированных сайтов (ссылки)"
+						type="text"
+						value={data.info.urls.join('\n')}
+						name="info.urls"
+						i="0"
+						textarea={true}
+						change={changeList}
+					/>
+					<h3>Задержки</h3>
+					<InputText
+						text="Время выполнения задания"
+						type="number"
+						value={data.info.delayComplete}
+						name="info.delayComplete"
+						i="0"
+						change={changeTime}
+					/>
+					<InputText
+						text="Задержка на выполнение одного и того же задания"
+						type="number"
+						value={data.info.delayRepeat}
+						name="info.delayRepeat"
+						i="0"
+						change={changeTime}
+					/>
 					<center>
 						<button
 							type="button"
@@ -431,8 +531,9 @@ const Admin = () => {
 						placeholder="user@mail.ru"
 						i="0"
 					/>
-					<div>
+					<div className="row" style={{ justifyContent: 'space-evenly', alignItems: 'center' }}>
 						<div>
+							<p>Начисления</p>
 							<select className="custom-select" ref={typeRef}>
 								<option value="allow_money">Деньги</option>
 								<option value="clicks">Клики</option>
@@ -448,34 +549,69 @@ const Admin = () => {
 							/>
 							<button type="button" className="btn btn-success" onClick={changeUser}>Начислить</button>
 						</div>
-						<div><button type="button" className="btn btn-danger" onClick={delUser}>Удалить пользователя</button></div>
+						<div>
+							<p>Рефералы</p>
+							<button type="button" className="btn btn-success" onClick={getRefs}>Получить реферальную таблицу</button>
+							<table>
+								<tbody>
+									<tr>
+										<td>Уровень</td>
+										<td className="table-refs__td">1</td>
+										<td className="table-refs__td">2</td>
+										<td className="table-refs__td">3</td>
+										<td className="table-refs__td">4</td>
+										<td className="table-refs__td">5</td>
+									</tr>
+									<tr>
+										<td>Кол-во рефералов</td>
+										<td className="table-refs__td table-refs__count">0</td>
+										<td className="table-refs__td table-refs__count">0</td>
+										<td className="table-refs__td table-refs__count">0</td>
+										<td className="table-refs__td table-refs__count">0</td>
+										<td className="table-refs__td table-refs__count">0</td>
+									</tr>
+									<tr>
+										<td>Траты рефералов</td>
+										<td className="table-refs__td table-refs__sum">0</td>
+										<td className="table-refs__td table-refs__sum">0</td>
+										<td className="table-refs__td table-refs__sum">0</td>
+										<td className="table-refs__td table-refs__sum">0</td>
+										<td className="table-refs__td table-refs__sum">0</td>
+									</tr>
+								</tbody>
+							</table>
+							<p>Общие траты рефералов: {sumRefs} ₽</p>
+							<p>Вывел всего: {outputMoney} ₽</p>
+							<p>Баланс пользователя: {allowMoney} ₽</p>
+						</div>
+						<div>
+							<p>Удаление</p>
+							<button type="button" className="btn btn-danger" onClick={delUser}>Удалить пользователя</button>
+						</div>
 					</div>
 					<h3>Задания с жалобами</h3>
-					<div>{Object.values(tasks).map((data, i) => {
+					<div>{tasks.map((data, i) =>
 						<div key={i}>
 							<p>Автор: {data.author}</p>
 							<p>Ссылки:</p>
 							<ul>
-								{data.urls.map((url, i) => {
+								{data.urls.map((url, i) =>
 									<li key={i}>{url}</li>
-								})}
+								)}
 							</ul>
-							<button type="button" className="btn btn-danger" id={data.id} onClick={(e) => delTask(e.target)}>Удалить задание</button>
+							<button type="button" className="btn btn-danger" id={`${data.id}/${data.urls.length}`} onClick={(e) => delTask(e.target)}>Удалить задание</button>
 						</div>
-					})}</div>
-					<h3>Тексты и ссылки</h3>
-					{Object.values(data.info.texts).map((data, i) => <>
-						<InputText
-							text={data.place.split('?')[1]}
-							type="text"
-							value={data.text}
-							name='info.texts.text'
-							change={change}
-							i={i}
-							key={i}
-							textarea={true}
-						/>
-					</>)}
+					)}</div>
+				<h3>Заявки на вывод</h3>
+				{Object.values(data.info.bids).map((data, i) => 
+					<div key={i}>
+						<p>Пользователь: {data.mail}</p>
+						<p>Сумма: {data.value}</p>
+						<p>Кошелёк: {data.wallet}</p>
+						<button type="button" className="btn btn-success">Выплачено</button>
+						<button type="button" className="btn btn-danger">Отклонить</button>
+					</div>	
+				)}
 				</div>
 			)}
 		</div>

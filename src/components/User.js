@@ -126,7 +126,7 @@ const User = () => {
 			) : param === '?add' ? (
 				<Add data={data} mail={mail} setUpdate={setUpdate} />
 			) : param === '?tasks' ? (
-				<Tasks tasks={tasks} setUpdate={setUpdate} />
+				<Tasks data={data} tasks={tasks} setUpdate={setUpdate} />
 			) : param === '?exchange' ? (
 				<Exchange data={data} mail={mail} setUpdate={setUpdate} />
 			) : (

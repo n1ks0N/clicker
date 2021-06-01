@@ -29,22 +29,22 @@ const Refs = ({ data, mail }) => {
 			});
 		}
 	}, [data.refs]);
-	// const copy = (e) => {
-	// 	e.persist();
-	// 	e.target.select();
-	// 	navigator.clipboard.writeText(e.target.value);
-	// };
+	const copy = (e) => {
+		e.persist();
+		e.target.select();
+		navigator.clipboard.writeText(e.target.value);
+	};
 	return (
 		<>
 			<h2>Партнёрская программа</h2>
 			<h4>Реферальная ссылка</h4>
-			{/* <input
+			<input
 				type="url"
 				value={`${window.location.origin}?ref=${mail}`}
 				className="form-control"
 				onClick={(e) => copy(e)}
 				readOnly
-			/> */}
+			/>
 			<p>Поделиться реферальной ссылкой</p>
 			<div
 				className="ya-share2"

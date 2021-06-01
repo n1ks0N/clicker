@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from 'firebase';
 import { fb } from '../../utils/constants/firebase';
 
-const Tasks = ({ tasks, setUpdate }) => {
+const Tasks = ({ data, tasks, setUpdate }) => {
 	const tasksDB = fb.firestore().collection('tasks');
 
 	const addCounts = ({ id }) => {
@@ -51,6 +51,7 @@ const Tasks = ({ tasks, setUpdate }) => {
 	return (
 		<>
 			<h2>Мои задания</h2>
+			<h4>Клики: {data.clicks}</h4>
 			{tasks.map((data, i) => (
 				<div
 					key={i}

@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { urlAd, keyAd } from './utils/constants/api.json';
 import { Route, Switch, Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -10,11 +10,20 @@ import Login from './components/Login';
 import Sign from './components/Sign';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
+import { fb } from './utils/constants/firebase';
 
 const App = () => {
 	const dispatch = useDispatch();
 	const activeReferrer = useLocation().search.split('=')[1];
 
+	const [users, setUsers] = useState(0)
+	useEffect(() => {
+		fb.firestore().collection('users').get().then((querySnapshot) => {
+			querySnapshot.forEach((doc) => {
+        setUsers(prev => prev + 1)
+    });
+		})
+	}, [])
 	const [data, setData] = useState(null); // jsonbin: рекламный контент, админ-панель
 
 	useLayoutEffect(() => {
@@ -60,7 +69,7 @@ const App = () => {
 				}
 			}
 		};
-		req.open('GET', "urlAd", true);
+		req.open('GET', urlAd, true);
 		req.setRequestHeader('X-Master-Key', keyAd);
 		req.send();
 
@@ -139,6 +148,8 @@ by https://github.com/n1ks0N
 					<Switch>
 						<Route exact path="/">
 							<div className="app">
+								<h4>Сайт работает: {Math.ceil((Date.now() - 1622201139119)/86400000)} дней</h4>
+								<h4>Зарегистрировано: {users}</h4>
 								{!!data &&
 									data.info.texts.map((data, i) =>
 										!!(data.place === '/') && <div key={i} dangerouslySetInnerHTML={{ __html: data.result }} />

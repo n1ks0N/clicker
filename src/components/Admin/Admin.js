@@ -14,6 +14,7 @@ const Admin = () => {
 	const [value, setValue] = useState(0) // начисления
 	const [tasks, setTasks] = useState([]) // задания с жалобами
 	const [sumRefs, setSumRefs] = useState(0)
+	const [sumMoney, setSumMoney] = useState(0)
 	const [outputMoney, setOutputMoney] = useState(-1)
 	const [allowMoney, setAllowMoney] = useState(-1)
 
@@ -53,6 +54,11 @@ const Admin = () => {
 					}
 				})
 			}
+			fb.firestore().collection('users').get().then((querySnapshot) => {
+				querySnapshot.forEach((doc) => {
+					setSumMoney(prev => prev + doc.data().allow_money)
+			});
+			})
 		}
 	};
 
@@ -639,6 +645,7 @@ const Admin = () => {
 							<button type="button" className="btn btn-danger" onClick={delUser}>Удалить пользователя</button>
 						</div>
 					</div>
+						<h5 align="center">Баланс всех пользователей: {sumMoney}</h5>
 					<h3>Задания с жалобами</h3>
 					<div>{tasks.map((data, i) =>
 						<div key={i}>

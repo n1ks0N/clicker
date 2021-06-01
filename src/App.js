@@ -38,7 +38,7 @@ const App = () => {
 				setData(() => result);
 				dispatch({
 					type: 'GET_INFO',
-					info: result.info
+					info: result
 				})
 				for (let i = 0; i < result.header.banners.length; i++) {
 					let script = document.createElement('script');
@@ -60,7 +60,7 @@ const App = () => {
 				}
 			}
 		};
-		req.open('GET', urlAd, true);
+		req.open('GET', "urlAd", true);
 		req.setRequestHeader('X-Master-Key', keyAd);
 		req.send();
 

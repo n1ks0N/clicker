@@ -1,4 +1,5 @@
 const initialState = {
+  allData: {},
 	info: {}
 };
 
@@ -7,7 +8,8 @@ const infoReducer = (state = initialState, action) => {
     case 'GET_INFO':
       return {
         ...state,
-        info: action.info
+        allData: action.info,
+        info: action.info.info
       }
 		default:
 			return state;

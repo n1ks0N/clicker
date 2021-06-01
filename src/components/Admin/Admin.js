@@ -22,6 +22,7 @@ const Admin = () => {
 	const passRef = useRef('');
 
 	const tasksDB = fb.firestore().collection('tasks')
+	const usersDB = fb.firestore().collection('users')
 
 	const login = () => {
 		const a = true
@@ -102,6 +103,12 @@ const Admin = () => {
 			}
 		}))
 	}
+	const changeUser = () => {
+		fb.firestore().collection('users').doc(`${user}`).set({
+			[typeRef.current.value]: Number(value)
+		}, { merge: true })
+	}
+
 	const del = ({ target: { id } }) => {
 		const section = id.split('.')[0];
 		const category = id.split('.')[1];
@@ -124,6 +131,28 @@ const Admin = () => {
 			}
 		});
 	};
+	const delUser = () => {
+		const user = firebase.auth().currentUser
+	}
+	const delTask = ({ id }) => {
+		const taskId = id.split('/')[0];
+		const taskDoc = id.split('/')[1];
+		tasksDB
+			.doc(`${taskDoc}`)
+			.get()
+			.then((doc) => {
+				if (doc.exists) {
+					for (let key in doc.data()) {
+						if (doc.data()[key].id === taskId) {
+							tasksDB.doc(`${taskDoc}`).update({
+								[key]: firebase.firestore.FieldValue.delete()
+							});
+						}
+					}
+				}
+			})
+	}
+
 	const add = ({ target: { id } }) => {
 		const section = id.split('.')[0];
 		const category = id.split('.')[1];
@@ -154,32 +183,43 @@ const Admin = () => {
 		});
 	};
 
-	const changeUser = () => {
-		fb.firestore().collection('users').doc(`${user}`).set({
-			[typeRef.current.value]: Number(value)
-		}, { merge: true })
-	}
-	const delUser = () => {
-		const user = firebase.auth().currentUser
-	}
-	const delTask = ({ id }) => {
-		const taskId = id.split('/')[0];
-		const taskDoc = id.split('/')[1];
-		tasksDB
-			.doc(`${taskDoc}`)
-			.get()
-			.then((doc) => {
-				if (doc.exists) {
-					for (let key in doc.data()) {
-						if (doc.data()[key].id === taskId) {
-							tasksDB.doc(`${taskDoc}`).update({
-								[key]: firebase.firestore.FieldValue.delete()
-							});
-						}
-					}
+	const successPayment = ({ id }) => {
+		setData(prev => {
+			let arr = prev.info.bids.slice()
+			arr.splice(id.split('/')[0], 1)
+			return {
+				...prev,
+				info: {
+					...prev.info,
+					bids: arr
 				}
-			})
+			}
+		})
 	}
+	const cancelPayment = ({ id }) => {
+		const i = id.split('/')[0]
+		const mail = data.info.bids[i].mail
+		usersDB.doc(`${mail}`).get().then((doc) => {
+			if (doc.exists) {
+				usersDB.doc(`${mail}`).set({
+					allow_money: doc.data().allow_money + Number(data.info.bids[i].value),
+					output_money: doc.data().output_money - data.info.bids[i].value
+				}, { merge: true })
+			}
+		})
+		setData(prev => {
+			let arr = prev.info.bids.slice()
+			arr.splice(i, 1)
+			return {
+				...prev,
+				info: {
+					...prev.info,
+					bids: arr
+				}
+			}
+		})
+	}
+
 	const getRefs = () => {
 		fb.firestore().collection('users').doc(`${user}`).get().then((doc) => {
 			// рефералы
@@ -512,6 +552,16 @@ const Admin = () => {
 						i="0"
 						change={changeTime}
 					/>
+					<h3>Заявки на вывод</h3>
+					{Object.values(data.info.bids).map((data, i) =>
+						<div key={i}>
+							<p>Пользователь: {data.mail}</p>
+							<p>Сумма: {data.value}</p>
+							<p>Кошелёк: {data.wallet}</p>
+							<button type="button" className="btn btn-success" id={`${i}/success`} onClick={(e) => successPayment(e.target)}>Выплачено</button>
+							<button type="button" className="btn btn-danger" id={`${i}/cancel`} onClick={(e) => cancelPayment(e.target)}>Отклонить</button>
+						</div>
+					)}
 					<center>
 						<button
 							type="button"
@@ -602,16 +652,6 @@ const Admin = () => {
 							<button type="button" className="btn btn-danger" id={`${data.id}/${data.urls.length}`} onClick={(e) => delTask(e.target)}>Удалить задание</button>
 						</div>
 					)}</div>
-				<h3>Заявки на вывод</h3>
-				{Object.values(data.info.bids).map((data, i) => 
-					<div key={i}>
-						<p>Пользователь: {data.mail}</p>
-						<p>Сумма: {data.value}</p>
-						<p>Кошелёк: {data.wallet}</p>
-						<button type="button" className="btn btn-success">Выплачено</button>
-						<button type="button" className="btn btn-danger">Отклонить</button>
-					</div>	
-				)}
 				</div>
 			)}
 		</div>

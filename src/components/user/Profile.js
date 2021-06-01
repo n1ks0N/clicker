@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../elements/Input';
 import { fb } from '../../utils/constants/firebase';
+import { urlAd, keyAd } from '../../utils/constants/api.json';
 
 const Profile = ({ data, mail, setUpdate }) => {
+	const {
+		info: { allData }
+	} = useSelector((store) => store);
+	console.log(allData)
 	const dispatch = useDispatch();
 	const [walletValue, setWalletValue] = useState('');
 	const [outputValue, setOutputValue] = useState('');
@@ -28,6 +33,22 @@ const Profile = ({ data, mail, setUpdate }) => {
 							{ merge: true }
 						);
 					}
+				}).then(() => {
+					let newAllData = allData
+					newAllData.info.bids.push({
+						mail: mail,
+						value: outputValue,
+						wallet: walletValue
+					})
+					dispatch({
+						type: 'GET_INFO',
+						info: newAllData
+					})
+					let req = new XMLHttpRequest();
+					req.open('PUT', urlAd, true);
+					req.setRequestHeader('Content-Type', 'application/json');
+					req.setRequestHeader('X-Master-Key', keyAd);
+					req.send(JSON.stringify(newAllData));
 				})
 				.then(() => setUpdate((prev) => !prev));
 			dispatch({

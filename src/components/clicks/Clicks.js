@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fb } from '../../utils/constants/firebase';
 import { vip } from '../../utils/constants/const.json';
@@ -8,7 +8,8 @@ import './Clicks.css';
 
 const Clicks = () => {
 	const {
-		user: { data, mail }
+		user: { data, mail },
+		info: { info }
 	} = useSelector((store) => store);
 	let { category } = useParams();
 	const [tasks, setTasks] = useState({});
@@ -52,7 +53,7 @@ const Clicks = () => {
 					setCompleteUrls((prev) => [...prev, { id: id, href: href }]);
 			} else {
 				setCompleteUrls([taskId, { id: id, href: href }]);
-				setSumTime(15);
+				setSumTime(info.delayComplete || 15);
 			}
 		}
 	};

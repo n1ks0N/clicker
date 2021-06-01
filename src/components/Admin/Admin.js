@@ -640,10 +640,10 @@ const Admin = () => {
 							<p>Вывел всего: {outputMoney} ₽</p>
 							<p>Баланс пользователя: {allowMoney} ₽</p>
 						</div>
-						<div>
+						{/* <div>
 							<p>Удаление</p>
 							<button type="button" className="btn btn-danger" onClick={delUser}>Удалить пользователя</button>
-						</div>
+						</div> */}
 					</div>
 						<h5 align="center">Баланс всех пользователей: {sumMoney}</h5>
 					<h3>Задания с жалобами</h3>

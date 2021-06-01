@@ -155,6 +155,8 @@ by https://github.com/n1ks0N
 										!!(data.place === '/') && <div key={i} dangerouslySetInnerHTML={{ __html: data.result }} />
 									)
 								}
+								<a to="/user?profile"><button type="button" className="btn btn-success">Регистрация</button></a>
+								<a to="/user?profile"><button type="button" className="btn btn-primary">Войти</button></a>
 							</div>
 						</Route>
 						<Route exact path="/admin" component={Admin} />
@@ -164,6 +166,12 @@ by https://github.com/n1ks0N
 						<Route path="/sign" component={Sign} />
 					</Switch>
 				</AuthProvider>
+				<div className="ad__list ad__list__column">
+						{!!data &&
+							data.footer.banners.map((data, i) => (
+								<div key={i} dangerouslySetInnerHTML={{ __html: data.div }} />
+							))}
+					</div>
 				<div className="ad__list">
 					{/* рекламная секция */}
 					{!!data &&

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fb } from '../../utils/constants/firebase';
 import Input from '../../elements/Input';
 import Select from '../../elements/Select';
@@ -9,16 +9,21 @@ import { createName } from '../../utils/functions/func';
 
 const Add = ({ data, mail, setUpdate }) => {
 	const dispatch = useDispatch();
+	const { info: { info } } = useSelector(store => store)
 	const [nameValue, setNameValue] = useState('');
 	const [categoryValue, setCategoryValue] = useState([1]);
-	const [totalClicksValue, setTotalClicksValue] = useState(10);
+	const [totalClicksValue, setTotalClicksValue] = useState(0);
 	const tasksDB = fb.firestore().collection('tasks');
 	const userDoc = mail
 		? fb.firestore().collection('users').doc(`${mail}`)
 		: false;
 	const createTask = () => {
-		if (data.clicks >= Number(totalClicksValue) * categoryValue.length) {
-			const values = document.querySelectorAll('.category-input__url');
+		let allow = true;
+		const values = document.querySelectorAll('.category-input__url');
+		info.urls.forEach(url => values.forEach(({ value }) => {
+			if (url === value) allow = false
+		}))
+		if (data.clicks >= Number(totalClicksValue) * categoryValue.length && totalClicksValue && allow) {
 			let urls = []; // ссылки в задании
 			values.forEach(({ value }) => {
 				value.length > 0
@@ -76,15 +81,15 @@ const Add = ({ data, mail, setUpdate }) => {
 						}
 					});
 				})
-				.then(() => setUpdate((prev) => !prev))
 				.then(() =>
 					dispatch({
 						// обновить клики
 						type: 'UPDATE_USER_DATA',
 						name: 'clicks',
-						param: data.clicks - Number(totalClicksValue) * categoryValue.length
+						param: data.clicks - 10 - Number(totalClicksValue) * categoryValue.length
 					})
-				);
+				)
+				.then(() => setUpdate((prev) => !prev))
 		}
 	};
 	return (

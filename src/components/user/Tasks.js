@@ -1,19 +1,21 @@
 import React from 'react';
 import firebase from 'firebase';
 import { fb } from '../../utils/constants/firebase';
+import { useDispatch } from 'react-redux';
 
 const Tasks = ({ data, mail, tasks, setUpdate }) => {
+	const dispatch = useDispatch()
 	const tasksDB = fb.firestore().collection('tasks');
 	const usersDB = fb.firestore().collection('users')
 
 	const addCounts = ({ id }) => {
+		const taskId = id.split('/')[0]; // идентификатор
+		const taskDoc = id.split('/')[1]; // категория
 		usersDB.doc(`${mail}`).get().then((doc) => {
-			if (doc.exists && doc.data().clicks >= 10) {
+			if (doc.exists && doc.data().clicks >= 10 * taskDoc) {
 				usersDB.doc(`${mail}`).set({
-					clicks: doc.data().clicks - 10
+					clicks: doc.data().clicks - 10 * taskDoc
 				}, { merge: true })
-					const taskId = id.split('/')[0]; // идентификатор
-					const taskDoc = id.split('/')[1]; // категория
 					tasksDB
 						.doc(`${taskDoc}`)
 						.get()
@@ -24,7 +26,7 @@ const Tasks = ({ data, mail, tasks, setUpdate }) => {
 										tasksDB.doc(`${taskDoc}`).set(
 											{
 												[key]: {
-													total_clicks: doc.data()[key].total_clicks + 10
+													total_clicks: doc.data()[key].total_clicks + 10 * taskDoc
 												}
 											},
 											{ merge: true }
@@ -33,7 +35,15 @@ const Tasks = ({ data, mail, tasks, setUpdate }) => {
 								}
 							}
 						})
-						.then(() => setUpdate((prev) => !prev));
+						.then(() => {
+							dispatch({
+								// обновить клики
+								type: 'UPDATE_USER_DATA',
+								name: 'clicks',
+								param: doc.data().clicks - 10 * taskDoc
+							})
+						})
+						.then(() => setUpdate((prev) => !prev))
 				}
 		})
 	};
@@ -72,15 +82,15 @@ const Tasks = ({ data, mail, tasks, setUpdate }) => {
 					<h5>{data.name}</h5>
 					<p>Категория: {data.urls.length}</p>
 					<p>
-						Доступно выполнений: {data.total_clicks - data.spent_clicks}/
-						{data.total_clicks}{' '}
+						Выполненено всего: {data.total_clicks / data.urls.length}/
+						{(data.spent_clicks) / data.urls.length}{' '}
 						<button
 							id={`${data.id}/${data.urls.length}/add`}
 							type="button"
 							className="btn btn-success btn-sm"
 							onClick={(e) => addCounts(e.target)}
 						>
-							+
+							Добавить 10 выполнений
 						</button>
 					</p>
 					<p>Ссылки: </p>

@@ -133,7 +133,7 @@ const User = () => {
 			)}
 			{!!info.texts && info.texts.map((data, i) => 
 				!!(data.place === param) && 
-				<p key={i} className="user__text">{data.text}</p>
+				<p key={i} className="user__text" dangerouslySetInnerHTML={{__html: data.result}} />
 			)}
 			<button
 				type="button"

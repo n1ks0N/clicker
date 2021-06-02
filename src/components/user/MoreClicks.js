@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { fb } from '../../utils/constants/firebase';
 import { vip } from '../../utils/constants/const.json';
 

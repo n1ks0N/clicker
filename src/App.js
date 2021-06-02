@@ -85,7 +85,6 @@ Powered on ReactJS
 by https://github.com/n1ks0N
 			`);
 	}, []);
-	console.log(data)
 	return (
 		<>
 			<div className="bg"></div>

@@ -8,7 +8,6 @@ const Profile = ({ data, mail, setUpdate }) => {
 	const {
 		info: { allData }
 	} = useSelector((store) => store);
-	console.log(allData)
 	const dispatch = useDispatch();
 	const [walletValue, setWalletValue] = useState('');
 	const [outputValue, setOutputValue] = useState('');

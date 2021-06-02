@@ -20,7 +20,6 @@ const User = () => {
 		tasks: { tasks },
 		info: { info }
 	} = useSelector((store) => store);
-	console.log(info)
 	const [update, setUpdate] = useState(false);
 
 	const tasksDB = fb.firestore().collection('tasks');
@@ -126,7 +125,7 @@ const User = () => {
 			) : param === '?add' ? (
 				<Add data={data} mail={mail} setUpdate={setUpdate} />
 			) : param === '?tasks' ? (
-				<Tasks data={data} tasks={tasks} setUpdate={setUpdate} />
+				<Tasks data={data} mail={mail} tasks={tasks} setUpdate={setUpdate} />
 			) : param === '?exchange' ? (
 				<Exchange data={data} mail={mail} setUpdate={setUpdate} />
 			) : (
@@ -134,7 +133,7 @@ const User = () => {
 			)}
 			{!!info.texts && info.texts.map((data, i) => 
 				!!(data.place === param) && 
-				<p key={i}>{data.text}</p>
+				<p key={i} className="user__text">{data.text}</p>
 			)}
 			<button
 				type="button"

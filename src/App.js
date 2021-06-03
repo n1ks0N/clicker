@@ -26,7 +26,7 @@ const App = () => {
 	}, [])
 	const [data, setData] = useState(null); // jsonbin: рекламный контент, админ-панель
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		// начилие реферала
 		if (activeReferrer) {
 			dispatch({

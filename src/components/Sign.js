@@ -152,7 +152,7 @@ const Sign = ({ history }) => {
 	if (currentUser) return <Redirect to="/" />;
 
 	return (
-		<div className="log__wrapper">
+		<div className="log__wrapper app">
 			<h1>Зарегистрируйте аккаунт</h1>
 			<form onSubmit={handleSign}>
 				<label>Почта</label>

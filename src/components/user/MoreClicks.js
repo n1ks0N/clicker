@@ -10,7 +10,7 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 	const buy = ({ id }) => {
 		const lvl = id.split('/')[0];
 		// let refs;
-		if (data.allow_money > Number(vip[lvl].price) && data.lvl === 0) {
+		if (data.allow_money >= Number(vip[lvl].price) && data.lvl === 0) {
 			docRef
 				.get()
 				.then((doc) => {
@@ -119,7 +119,7 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 																														doc.data()
 																															.allow_money +
 																														vip[lvl].price *
-																															0.1,
+																														0.1,
 																													refs: refs,
 																													recd:
 																														doc.data().recd +
@@ -154,60 +154,66 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 			<h2>Больше кликов</h2>
 			<h4>Клики: {data.clicks}</h4>
 			<h4>Баланс: {data.allow_money} ₽</h4>
-			<p>1 вип ур 100 р + 50 % к кликам на 30 дней + 1000 кликов</p>
+			<p>1 вип ур 100 р + 50 % к кликам на 30 дней + 1000 кликов
 			<button
-				type="button"
-				className="btn btn-success"
-				id="0/lvl"
-				onClick={(e) => buy(e.target)}
-			>
-				Купить
+					type="button"
+					className="btn btn-success"
+					id="0/lvl"
+					onClick={(e) => buy(e.target)}
+				>
+					Купить
 			</button>
-			<p>2 вип ур 200 р + 100 % к кликам на 30 дней + 2000 кликов</p>
+			</p>
+			<p>2 вип ур 200 р + 100 % к кликам на 30 дней + 2000 кликов
 			<button
-				type="button"
-				className="btn btn-success"
-				id="1/lvl"
-				onClick={(e) => buy(e.target)}
-			>
-				Купить
+					type="button"
+					className="btn btn-success"
+					id="1/lvl"
+					onClick={(e) => buy(e.target)}
+				>
+					Купить
 			</button>
-			<p>3 вип ур 300 р + 150 % к кликам на 30 дней + 3000 кликов</p>
+			</p>
+			<p>3 вип ур 300 р + 150 % к кликам на 30 дней + 3000 кликов
 			<button
-				type="button"
-				className="btn btn-success"
-				id="2/lvl"
-				onClick={(e) => buy(e.target)}
-			>
-				Купить
+					type="button"
+					className="btn btn-success"
+					id="2/lvl"
+					onClick={(e) => buy(e.target)}
+				>
+					Купить
 			</button>
-			<p>4 вип ур 500 р + 100 % к кликам на 90 дней + 6000 кликов</p>
+			</p>
+			<p>4 вип ур 500 р + 100 % к кликам на 90 дней + 6000 кликов
 			<button
-				type="button"
-				className="btn btn-success"
-				id="3/lvl"
-				onClick={(e) => buy(e.target)}
-			>
-				Купить
+					type="button"
+					className="btn btn-success"
+					id="3/lvl"
+					onClick={(e) => buy(e.target)}
+				>
+					Купить
 			</button>
-			<p>5 вип ур 700 р + 150 % к кликам на 90 дней + 9000 кликов</p>
+			</p>
+			<p>5 вип ур 700 р + 150 % к кликам на 90 дней + 9000 кликов
 			<button
-				type="button"
-				className="btn btn-success"
-				id="4/lvl"
-				onClick={(e) => buy(e.target)}
-			>
-				Купить
+					type="button"
+					className="btn btn-success"
+					id="4/lvl"
+					onClick={(e) => buy(e.target)}
+				>
+					Купить
 			</button>
-			<p>6 вип ур 1000 р + 200 % к кликам на 90 дней + 12000 кликов</p>
+			</p>
+			<p>6 вип ур 1000 р + 200 % к кликам на 90 дней + 12000 кликов
 			<button
-				type="button"
-				className="btn btn-success"
-				id="5/lvl"
-				onClick={(e) => buy(e.target)}
-			>
-				Купить
+					type="button"
+					className="btn btn-success"
+					id="5/lvl"
+					onClick={(e) => buy(e.target)}
+				>
+					Купить
 			</button>
+			</p>
 		</div>
 	);
 };

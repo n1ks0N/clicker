@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fb } from '../utils/constants/firebase';
 
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
+	const { info: { info } } = useSelector(store => store)
 	const dispatch = useDispatch();
 	const [currentUser, setCurrentUser] = useState(null);
 	const [pending, setPending] = useState(true);
@@ -14,6 +15,8 @@ export const AuthProvider = ({ children }) => {
 			setCurrentUser(user);
 			setPending(false);
 			if (user) {
+				let allow = info.mails.some(mail => mail === user.email)
+				if (!allow) {
 				const docRef = fb.firestore().collection('users').doc(`${user.email}`);
 				docRef
 					.get()
@@ -40,6 +43,14 @@ export const AuthProvider = ({ children }) => {
 					.catch((error) => {
 						// Ошибка
 					});
+				} else {
+					dispatch({
+						type: 'GET_USER_DATA',
+						data: {},
+						mail: ''
+					});
+					fb.auth().signOut()
+				}
 			} else {
 				dispatch({
 					type: 'GET_USER_DATA',

@@ -1,12 +1,17 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useState, useRef } from 'react';
 import { withRouter, Redirect, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux'
 import { fb } from '../utils/constants/firebase';
 import { AuthContext } from './Auth.js';
 
 const Login = ({ history }) => {
+	const { info: { info } } = useSelector(store => store)
+	const emailRef = useRef('')
 	const [errorMessage, setErrorMessage] = useState('');
 	const handleLogin = useCallback(
 		async (e) => {
+			// let allow = info.mails.some(mail => mail === email.value)
+			// if 
 			e.preventDefault();
 			const { email, password } = e.target.elements;
 			try {
@@ -32,8 +37,14 @@ const Login = ({ history }) => {
 
 	if (currentUser) return <Redirect to="/" />;
 
+	const reset = () => {
+		fb.auth().sendPasswordResetEmail(emailRef.current.value).then(() => {
+			console.log('ok')
+		})
+	}
+
 	return (
-		<div className="log__wrapper">
+		<div className="log__wrapper app">
 			<h1>Войдите в аккаунт</h1>
 			<form onSubmit={handleLogin}>
 				<label>Почта</label>
@@ -44,6 +55,7 @@ const Login = ({ history }) => {
 					className="form-control"
 					autoComplete="on"
 					required
+					ref={emailRef}
 				/>
 				<div className="invalid-feedback">{errorMessage}</div>
 				<label>Пароль</label>
@@ -58,7 +70,7 @@ const Login = ({ history }) => {
 				<button type="submit" className="btn btn-success">
 					Войти
 				</button>
-				<button type="button" className="btn btn-secondary btn-sm">
+				<button type="button" className="btn btn-secondary btn-sm" onClick={reset}>
 					Забыл пароль
 				</button>
 				<Link to="/sign">

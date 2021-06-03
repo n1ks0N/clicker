@@ -55,7 +55,7 @@ const Add = ({ data, mail, setUpdate }) => {
 								[id]: {
 									author: mail,
 									reports: 0,
-									total_clicks: Number(totalClicksValue),
+									total_clicks: Number(totalClicksValue) * categoryValue.length,
 									spent_clicks: 0,
 									urls,
 									id: createName(4),

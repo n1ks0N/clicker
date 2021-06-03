@@ -15,7 +15,7 @@ menu {
   align-items: center;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  width: calc(100% - 220px);
+  width: 100%;
 }
 menu li {
   color: #fff;

@@ -115,6 +115,7 @@ const User = () => {
 					</Link>
 				</menu>
 			</header>
+			<div className="wrapper">
 			<h1 align="center">Личный кабинет</h1>
 			{param === '?profile' ? (
 				<Profile data={data} mail={mail} setUpdate={setUpdate} />
@@ -142,6 +143,7 @@ const User = () => {
 			>
 				Выйти
 			</button>
+		</div>
 		</div>
 	);
 };

@@ -152,6 +152,22 @@ const Exchange = ({ data, mail, setUpdate }) => {
 			})
 			.then(() => setUpdate((prev) => !prev));
 	};
+	const delBid = ({ id }) => {
+		bidsDoc
+			.get()
+			.then((doc) => {
+				if (doc.exists) {
+					for (let key in doc.data()) {
+						if (doc.data()[key].id === id) {
+							bidsDoc.update({
+								[key]: firebase.firestore.FieldValue.delete()
+							});
+						}
+					}
+				}
+			})
+			.then(() => setUpdate((prev) => !prev));
+	}
 	return (
 		<div className="wrapper">
 			<h2>Биржа кликов</h2>
@@ -182,6 +198,7 @@ const Exchange = ({ data, mail, setUpdate }) => {
 								<div className="col">{`${new Date(
 									data.date.seconds * 1000
 								)}`}</div>
+								<div><button type="button" className="btn btn-danger" id={data.id} onClick={(e) => delBid(e.target)}>Удалить</button></div>
 							</div>
 						)
 				)}

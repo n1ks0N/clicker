@@ -153,7 +153,7 @@ const Exchange = ({ data, mail, setUpdate }) => {
 			.then(() => setUpdate((prev) => !prev));
 	};
 	return (
-		<>
+		<div className="wrapper">
 			<h2>Биржа кликов</h2>
 			<h4>Клики: {data.clicks}</h4>
 			<h4>Баланс: {data.allow_money} ₽</h4>
@@ -312,7 +312,7 @@ const Exchange = ({ data, mail, setUpdate }) => {
 					</div>
 				))}
 			</div>
-		</>
+		</div>
 	);
 };
 

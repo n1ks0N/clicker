@@ -63,7 +63,7 @@ const Profile = ({ data, mail, setUpdate }) => {
 		}
 	};
 	return (
-		<>
+		<div className="wrapper">
 			<h2>Профиль</h2>
 			<h3>{mail}</h3>
 			<h4>
@@ -115,7 +115,7 @@ const Profile = ({ data, mail, setUpdate }) => {
 				Заказать вывод
 			</button>
 			<p>Всего выведено: {data.output_money} ₽</p>
-		</>
+		</div>
 	);
 };
 

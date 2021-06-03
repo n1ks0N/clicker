@@ -112,6 +112,10 @@ footer {
   bottom: 0;
   right: 0;
 }
+.wrapper {
+  width: 1024px;
+  margin: auto;
+}
 @media all and (max-width: 650px) {
   iframe {
       width: 100%;

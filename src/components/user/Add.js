@@ -93,7 +93,7 @@ const Add = ({ data, mail, setUpdate }) => {
 		}
 	};
 	return (
-		<>
+		<div className="wrapper">
 			<h2>Добавить задание</h2>
 			<h4>Клики: {data.clicks}</h4>
 			<h5>Создать задание</h5>
@@ -141,7 +141,7 @@ const Add = ({ data, mail, setUpdate }) => {
 					Создать задание
 				</button>
 			</div>
-		</>
+		</div>
 	);
 };
 

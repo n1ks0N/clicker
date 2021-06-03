@@ -35,7 +35,7 @@ const Refs = ({ data, mail }) => {
 		navigator.clipboard.writeText(e.target.value);
 	};
 	return (
-		<>
+		<div className="wrapper">
 			<h2>Партнёрская программа</h2>
 			<h4>Реферальная ссылка</h4>
 			<input
@@ -84,7 +84,7 @@ const Refs = ({ data, mail }) => {
 			</table>
 			<p>Общие траты рефералов: {sumRefs} ₽</p>
 			<p>Заработано всего: {data.recd} ₽</p>
-		</>
+		</div>
 	);
 };
 

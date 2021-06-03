@@ -150,7 +150,7 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 		}
 	};
 	return (
-		<>
+		<div className="wrapper">
 			<h2>Больше кликов</h2>
 			<h4>Клики: {data.clicks}</h4>
 			<h4>Баланс: {data.allow_money} ₽</h4>
@@ -208,7 +208,7 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 			>
 				Купить
 			</button>
-		</>
+		</div>
 	);
 };
 

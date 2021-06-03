@@ -67,7 +67,7 @@ const Tasks = ({ data, mail, tasks, setUpdate }) => {
 			.then(() => setUpdate((prev) => !prev));
 	};
 	return (
-		<>
+		<div className="wrapper">
 			<h2>Мои задания</h2>
 			<h4>Клики: {data.clicks}</h4>
 			{tasks.map((data, i) => (
@@ -110,7 +110,7 @@ const Tasks = ({ data, mail, tasks, setUpdate }) => {
 					</button>
 				</div>
 			))}
-		</>
+		</div>
 	);
 };
 

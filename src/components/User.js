@@ -115,7 +115,7 @@ const User = () => {
 					</Link>
 				</menu>
 			</header>
-			<h1>Личный кабинет</h1>
+			<h1 align="center">Личный кабинет</h1>
 			{param === '?profile' ? (
 				<Profile data={data} mail={mail} setUpdate={setUpdate} />
 			) : param === '?more_clicks' ? (

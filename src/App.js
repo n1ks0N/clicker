@@ -143,6 +143,7 @@ by https://github.com/n1ks0N
 							))}
 					</div>
 				</div>
+				
 				<AuthProvider>
 					<Switch>
 						<Route exact path="/">
@@ -154,8 +155,8 @@ by https://github.com/n1ks0N
 										!!(data.place === '/') && <div key={i} dangerouslySetInnerHTML={{ __html: data.result }} />
 									)
 								}
-								<a to="/user?profile"><button type="button" className="btn btn-success">Регистрация</button></a>
-								<a to="/user?profile"><button type="button" className="btn btn-primary">Войти</button></a>
+								<Link to="/sign"><button type="button" className="btn btn-success">Регистрация</button></Link>
+								<Link to="/user?profile"><button type="button" className="btn btn-primary">Войти</button></Link>
 							</div>
 						</Route>
 						<Route exact path="/admin" component={Admin} />

@@ -11,7 +11,7 @@ const Login = ({ history }) => {
 			const { email, password } = e.target.elements;
 			try {
 				await fb.auth().signInWithEmailAndPassword(email.value, password.value);
-				history.push('/user');
+				history.push('/user?profile');
 			} catch (error) {
 				switch (error.code) {
 					case 'auth/user-not-found':

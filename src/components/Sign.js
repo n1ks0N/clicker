@@ -18,7 +18,7 @@ const Sign = ({ history }) => {
 					.auth()
 					.createUserWithEmailAndPassword(email.value, password.value)
 					.then(() => {
-						usersRef.doc(`${email.value}`).set({
+						usersRef.doc(`${email.value.toLowerCase()}`).set({
 							output_money: 0,
 							allow_money: 0,
 							clicks: 0,

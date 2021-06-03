@@ -69,6 +69,12 @@ const Exchange = ({ data, mail, setUpdate }) => {
 								},
 								{ merge: true }
 							);
+							dispatch({
+								// обновить клики
+								type: 'UPDATE_USER_DATA',
+								name: 'clicks',
+								param: doc.data().clicks - countValue
+							})
 						}
 					});
 				})
@@ -297,6 +303,7 @@ const Exchange = ({ data, mail, setUpdate }) => {
 					<div className="col">Дата</div>
 					<div className="col"></div>
 				</div>
+				<div className="scroll-wrapper">
 				{bids.map((data, i) => (
 					<div className="row" key={i}>
 						<div className="col">
@@ -328,6 +335,7 @@ const Exchange = ({ data, mail, setUpdate }) => {
 						</div>
 					</div>
 				))}
+				</div>
 			</div>
 		</div>
 	);

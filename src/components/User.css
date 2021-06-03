@@ -18,3 +18,7 @@
   margin: 20px 0;
   text-align: center;
 }
+.scroll-wrapper {
+  height: 600px;
+  overflow-y: scroll;
+}

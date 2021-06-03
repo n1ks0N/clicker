@@ -22,6 +22,7 @@ const Clicks = () => {
 	window.onfocus = () => {
 		if (observer) {
 			setObserver(false);
+			console.log(observer)
 		}
 	};
 	useEffect(() => {
@@ -42,6 +43,7 @@ const Clicks = () => {
 			}, 1000);
 			return () => clearInterval(timerId);
 		}
+		console.log(observer, sumTime)
 	}, [observer, sumTime]);
 
 	const clickDone = ({ id, href }) => {
@@ -53,7 +55,7 @@ const Clicks = () => {
 					setCompleteUrls((prev) => [...prev, { id: id, href: href }]);
 			} else {
 				setCompleteUrls([taskId, { id: id, href: href }]);
-				setSumTime(info.delayComplete || 15);
+				setSumTime(Number(info.delayComplete) || 15);
 			}
 		}
 	};
@@ -83,7 +85,17 @@ const Clicks = () => {
 		if (completeUrls.length - 1 === Number(category) && sumTime <= 0) {
 			setObserver(false);
 			setCompleteUrls([]);
+			console.log(info.delayRepeat)
 			document.title = 'Задание выполнено | Кликер';
+ 			for (let i = 0; i < completeUrls.length - 1; i++) {
+				 document.getElementById(`${completeUrls[0]}/${i}`).firstChild.disabled = true
+			}
+			setTimeout(() => {
+				for (let i = 0; i < completeUrls.length - 1; i++) {
+					document.getElementById(`${completeUrls[0]}/${i}`).firstChild.disabled = false
+			 }
+			}, Number(`${info.delayRepeat}000`))
+
 			tasksDB
 				.doc(`${category}`)
 				.get()

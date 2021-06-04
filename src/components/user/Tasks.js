@@ -23,10 +23,26 @@ const Tasks = ({ data, mail, tasks, setUpdate }) => {
 							if (doc.exists) {
 								for (let key in doc.data()) {
 									if (doc.data()[key].id === taskId) {
+										tasksDB.doc(`${taskDoc}`).update({
+											[key]: firebase.firestore.FieldValue.delete()
+										})
+										const id = isNaN(
+											Object.keys(doc.data())[Object.keys(doc.data()).length - 1]
+										)
+											? Object.keys(doc.data()).length
+											: Number(
+													Object.keys(doc.data())[Object.keys(doc.data()).length - 1]
+												) + 1;
 										tasksDB.doc(`${taskDoc}`).set(
 											{
-												[key]: {
-													total_clicks: doc.data()[key].total_clicks + 10 * taskDoc
+												[id]: {
+													total_clicks: doc.data()[key].total_clicks + 10 * taskDoc,
+													author: doc.data()[key].author,
+													reports: doc.data()[key].reports,
+													spent_clicks: doc.data()[key].spent_clicks,
+													urls: doc.data()[key].urls,
+													id: doc.data()[key].id,
+													name: doc.data()[key].name
 												}
 											},
 											{ merge: true }

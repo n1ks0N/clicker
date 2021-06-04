@@ -73,7 +73,7 @@ const Refs = ({ data, mail }) => {
 						<td className="table-refs__td table-refs__count">0</td>
 					</tr>
 					<tr>
-						<td>Траты рефералов</td>
+						<td>Реферальные начисления</td>
 						<td className="table-refs__td table-refs__sum">0</td>
 						<td className="table-refs__td table-refs__sum">0</td>
 						<td className="table-refs__td table-refs__sum">0</td>
@@ -82,7 +82,7 @@ const Refs = ({ data, mail }) => {
 					</tr>
 				</tbody>
 			</table>
-			<p>Общие траты рефералов: {sumRefs} ₽</p>
+			<p>Общая сумма: {sumRefs} ₽</p>
 			<p>Заработано всего: {data.recd} ₽</p>
 		</div>
 	);

@@ -57,7 +57,7 @@ const Admin = () => {
 			fb.firestore().collection('users').get().then((querySnapshot) => {
 				querySnapshot.forEach((doc) => {
 					setSumMoney(prev => prev + doc.data().allow_money)
-			});
+				});
 			})
 		}
 	};
@@ -110,9 +110,13 @@ const Admin = () => {
 		}))
 	}
 	const changeUser = () => {
-		fb.firestore().collection('users').doc(`${user.toLowerCase()}`).set({
-			[typeRef.current.value]: Number(value)
-		}, { merge: true })
+		fb.firestore().collection('users').doc(`${user.toLowerCase()}`).get().then((doc) => {
+			if (doc.exists) {
+				fb.firestore().collection('users').doc(`${user.toLowerCase()}`).set({
+					[typeRef.current.value]: doc.data()[typeRef.current.value] + Number(value)
+				}, { merge: true })
+			}
+		})
 	}
 
 	const del = ({ target: { id } }) => {
@@ -642,7 +646,7 @@ const Admin = () => {
 							<button type="button" className="btn btn-danger" onClick={delUser}>Удалить пользователя</button>
 						</div> */}
 					</div>
-						<h5 align="center">Баланс всех пользователей: {sumMoney}</h5>
+					<h5 align="center">Баланс всех пользователей: {sumMoney}</h5>
 					<h3>Задания с жалобами</h3>
 					<div>{tasks.map((data, i) =>
 						<div key={i}>

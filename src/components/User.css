@@ -21,6 +21,7 @@
 .scroll-wrapper {
   height: 600px;
   overflow-y: scroll;
+  width: 1010px;
 }
 .more-clicks__wrap {
   display: flex;
@@ -35,4 +36,7 @@
 }
 .column p {
   margin: 12px 0;
+}
+.col {
+  text-align: center;
 }

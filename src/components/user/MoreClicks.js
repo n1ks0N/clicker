@@ -154,7 +154,28 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 			<h2>Больше кликов</h2>
 			<h4>Клики: {data.clicks}</h4>
 			<h4>Баланс: {data.allow_money} ₽</h4>
+			<div className="more-clicks__wrap">
+			<div className="column">
 			<p>1 вип ур 100 р + 50 % к кликам на 30 дней + 1000 кликов
+			
+			</p>
+			<p>2 вип ур 200 р + 100 % к кликам на 30 дней + 2000 кликов
+			
+			</p>
+			<p>3 вип ур 300 р + 150 % к кликам на 30 дней + 3000 кликов
+			
+			</p>
+			<p>4 вип ур 500 р + 100 % к кликам на 90 дней + 6000 кликов
+			
+			</p>
+			<p>5 вип ур 700 р + 150 % к кликам на 90 дней + 9000 кликов
+			
+			</p>
+			<p>6 вип ур 1000 р + 200 % к кликам на 90 дней + 12000 кликов
+			
+			</p>
+			</div>
+			<div className="column">
 			<button
 					type="button"
 					className="btn btn-success"
@@ -163,8 +184,6 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 				>
 					Купить
 			</button>
-			</p>
-			<p>2 вип ур 200 р + 100 % к кликам на 30 дней + 2000 кликов
 			<button
 					type="button"
 					className="btn btn-success"
@@ -173,8 +192,6 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 				>
 					Купить
 			</button>
-			</p>
-			<p>3 вип ур 300 р + 150 % к кликам на 30 дней + 3000 кликов
 			<button
 					type="button"
 					className="btn btn-success"
@@ -183,8 +200,6 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 				>
 					Купить
 			</button>
-			</p>
-			<p>4 вип ур 500 р + 100 % к кликам на 90 дней + 6000 кликов
 			<button
 					type="button"
 					className="btn btn-success"
@@ -193,8 +208,6 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 				>
 					Купить
 			</button>
-			</p>
-			<p>5 вип ур 700 р + 150 % к кликам на 90 дней + 9000 кликов
 			<button
 					type="button"
 					className="btn btn-success"
@@ -203,8 +216,6 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 				>
 					Купить
 			</button>
-			</p>
-			<p>6 вип ур 1000 р + 200 % к кликам на 90 дней + 12000 кликов
 			<button
 					type="button"
 					className="btn btn-success"
@@ -213,7 +224,8 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 				>
 					Купить
 			</button>
-			</p>
+			</div>
+			</div>
 		</div>
 	);
 };

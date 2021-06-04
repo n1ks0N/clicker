@@ -110,7 +110,7 @@ const Admin = () => {
 		}))
 	}
 	const changeUser = () => {
-		fb.firestore().collection('users').doc(`${user}`).set({
+		fb.firestore().collection('users').doc(`${user.toLowerCase()}`).set({
 			[typeRef.current.value]: Number(value)
 		}, { merge: true })
 	}
@@ -137,9 +137,6 @@ const Admin = () => {
 			}
 		});
 	};
-	const delUser = () => {
-		const user = firebase.auth().currentUser
-	}
 	const delTask = ({ id }) => {
 		const taskId = id.split('/')[0];
 		const taskDoc = id.split('/')[1];

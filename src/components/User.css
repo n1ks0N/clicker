@@ -22,3 +22,17 @@
   height: 600px;
   overflow-y: scroll;
 }
+.more-clicks__wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.column p {
+  margin: 12px 0;
+}

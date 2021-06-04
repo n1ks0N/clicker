@@ -11,7 +11,6 @@ const Clicks = () => {
 		user: { data, mail },
 		info: { info }
 	} = useSelector((store) => store);
-	let { category } = useParams();
 	const [tasks, setTasks] = useState({});
 	const [completeUrls, setCompleteUrls] = useState([]);
 	const [update, setUpdate] = useState(false);
@@ -19,10 +18,13 @@ const Clicks = () => {
 	const [sumTime, setSumTime] = useState(1); // считает время, проводимое на ссылках из заданий
 	const tasksDB = fb.firestore().collection('tasks');
 	const userDoc = mail ? fb.firestore().collection('users').doc(`${mail}`) : '';
+	const [category, setCategory] = useState(window.location.search.split('?')[1]);
+	useEffect(() => {
+		setCategory(window.location.search.split('?')[1]);
+	}, [window.location.search]);
 	window.onfocus = () => {
 		if (observer) {
 			setObserver(false);
-			console.log(observer)
 		}
 	};
 	useEffect(() => {
@@ -43,7 +45,6 @@ const Clicks = () => {
 			}, 1000);
 			return () => clearInterval(timerId);
 		}
-		console.log(observer, sumTime)
 	}, [observer, sumTime]);
 
 	const clickDone = ({ id, href }) => {

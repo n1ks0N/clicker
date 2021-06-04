@@ -93,19 +93,19 @@ by https://github.com/n1ks0N
 					<Link to="/">
 						<li>Главная</li>
 					</Link>
-					<Link to="/clicks/1">
+					<Link to="/clicks?1">
 						<li>1 клик</li>
 					</Link>
-					<Link to="/clicks/2">
+					<Link to="/clicks?2">
 						<li>2 клика</li>
 					</Link>
-					<Link to="/clicks/3">
+					<Link to="/clicks?3">
 						<li>3 клика</li>
 					</Link>
-					<Link to="/clicks/4">
+					<Link to="/clicks?4">
 						<li>4 клика</li>
 					</Link>
-					<Link to="/clicks/5">
+					<Link to="/clicks?5">
 						<li>5 кликов</li>
 					</Link>
 					<Link to="/user?profile">
@@ -160,7 +160,7 @@ by https://github.com/n1ks0N
 							</div>
 						</Route>
 						<Route exact path="/admin" component={Admin} />
-						<Route path="/clicks/:category" component={Clicks} />
+						<Route path="/clicks" component={Clicks} />
 						<PrivateRoute path="/user" component={User} />
 						<Route path="/login" component={Login} />
 						<Route path="/sign" component={Sign} />

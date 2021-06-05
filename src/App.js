@@ -1,7 +1,7 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { urlAd, keyAd } from './utils/constants/api.json';
 import { Route, Switch, Link, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Clicks from './components/clicks/Clicks';
 import Admin from './components/Admin/Admin'
 import User from './components/User';
@@ -13,6 +13,24 @@ import './App.css';
 import { fb } from './utils/constants/firebase';
 
 const App = () => {
+	const { user: { alert } } = useSelector((store) => store)
+	console.log(alert)
+	const alertStyle = useMemo(
+		() => ({
+			display: alert ? 'block' : 'none'
+		}),
+		[alert]
+	);
+	useEffect(() => {
+		if (alert) {
+			setTimeout(() => {
+				dispatch({
+					type: 'UPDATE_ALERT',
+					alert: false
+				});
+			}, 3000);
+		}
+	}, [alert]);
 	const dispatch = useDispatch();
 	const activeReferrer = useLocation().search.split('=')[1];
 
@@ -20,8 +38,8 @@ const App = () => {
 	useEffect(() => {
 		fb.firestore().collection('users').get().then((querySnapshot) => {
 			querySnapshot.forEach((doc) => {
-        setUsers(prev => prev + 1)
-    });
+				setUsers(prev => prev + 1)
+			});
 		})
 	}, [])
 	const [data, setData] = useState(null); // jsonbin: рекламный контент, админ-панель
@@ -143,12 +161,11 @@ by https://github.com/n1ks0N
 							))}
 					</div>
 				</div>
-				
 				<AuthProvider>
 					<Switch>
 						<Route exact path="/">
 							<div className="app">
-								<h4>Сайт работает: {Math.ceil((Date.now() - 1622201139119)/86400000)} дней</h4>
+								<h4>Сайт работает: {Math.ceil((Date.now() - 1622201139119) / 86400000)} дней</h4>
 								<h4>Зарегистрировано: {users}</h4>
 								{!!data &&
 									data.info.texts.map((data, i) =>
@@ -167,11 +184,11 @@ by https://github.com/n1ks0N
 					</Switch>
 				</AuthProvider>
 				<div className="ad__list ad__list__column">
-						{!!data &&
-							data.footer.banners.map((data, i) => (
-								<div key={i} dangerouslySetInnerHTML={{ __html: data.div }} />
-							))}
-					</div>
+					{!!data &&
+						data.footer.banners.map((data, i) => (
+							<div key={i} dangerouslySetInnerHTML={{ __html: data.div }} />
+						))}
+				</div>
 				<div className="ad__list">
 					{/* рекламная секция */}
 					{!!data &&
@@ -211,6 +228,13 @@ by https://github.com/n1ks0N
 				data-shape="round"
 				data-services="vkontakte,facebook,odnoklassniki,telegram,twitter,viber,whatsapp,moimir"
 			/>
+			<div
+				className="alert alert-secondary main__alert"
+				style={alertStyle}
+				role="alert"
+			>
+				{alert}	
+			</div>
 		</>
 	);
 };

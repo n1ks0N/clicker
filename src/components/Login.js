@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { withRouter, Redirect, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux'
 import { fb } from '../utils/constants/firebase';
 import { AuthContext } from './Auth.js';
 
 const Login = ({ history }) => {
-	const { info: { info } } = useSelector(store => store)
+	const dispatch = useDispatch()
 	const emailRef = useRef('')
 	const [errorMessage, setErrorMessage] = useState('');
 	const handleLogin = useCallback(
@@ -39,7 +39,10 @@ const Login = ({ history }) => {
 
 	const reset = () => {
 		fb.auth().sendPasswordResetEmail(emailRef.current.value).then(() => {
-			console.log('ok')
+			dispatch({
+				type: 'UPDATE_ALERT',
+				alert: 'Сообщение о восстановлении пароля отправлено на почту'
+			})
 		})
 	}
 

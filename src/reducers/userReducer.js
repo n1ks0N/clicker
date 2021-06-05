@@ -1,6 +1,7 @@
 const initialState = {
 	data: {},
-	mail: ''
+	mail: '',
+	alert: false
 };
 
 const userReducer = (state = initialState, action) => {
@@ -24,6 +25,11 @@ const userReducer = (state = initialState, action) => {
 					[action.name]: action.param
 				}
 			};
+		case 'UPDATE_ALERT':
+			return {
+				...state,
+				alert: action.alert
+			}
 		default:
 			return state;
 	}
@@ -45,5 +51,7 @@ export const UpdateUserDataActionCreator = (name, param) => ({
 	name: name,
 	param: param
 });
+
+export const UpdateAlertActionCreator = (alert) => ({ type: 'UPDATE_ALERT', alert: alert })
 
 export default userReducer;

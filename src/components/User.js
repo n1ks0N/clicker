@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import firebase from 'firebase';
+import { Link } from 'react-router-dom';
 import { fb } from '../utils/constants/firebase';
 
 import Profile from './user/Profile';

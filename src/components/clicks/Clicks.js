@@ -141,7 +141,7 @@ const Clicks = () => {
 	}, [completeUrls, sumTime]);
 	return (
 		<div>
-			<h1>Категория: {category} клика</h1>
+			<h1 className="clicks__title">Категория: {category} клика</h1>
 			<div className="clicks__wrapper">
 				{Object.values(tasks)
 					.reverse()

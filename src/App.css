@@ -108,7 +108,7 @@ footer {
   align-items: center;
 }
 .main__alert {
-  position: fixed;
+  position: fixed !important;
   bottom: 0;
   right: 0;
 }

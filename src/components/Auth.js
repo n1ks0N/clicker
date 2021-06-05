@@ -35,6 +35,10 @@ export const AuthProvider = ({ children }) => {
 									},
 									{ merge: true }
 								);
+								dispatch({
+									type: 'UPDATE_ALERT',
+									alert: 'Получен бонус 5 кликов'
+								})
 							}
 						} else {
 							// Пользователь незарегистрирован

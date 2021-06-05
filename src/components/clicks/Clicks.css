@@ -20,3 +20,6 @@
   align-items: center;
   flex-wrap: wrap;
 }
+.clicks__title {
+  text-align: center;
+}

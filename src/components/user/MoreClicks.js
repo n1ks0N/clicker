@@ -21,7 +21,7 @@ const MoreClicks = ({ data, mail, setUpdate }) => {
 								vip: Number(lvl) + 1,
 								lvl: Number(lvl) + 1,
 								date: new Date(Date.now() + 86400000 * vip[lvl].days),
-								clicks: vip[lvl].clicks
+								clicks: doc.data()[key].clicks + Number(vip[lvl].clicks)
 							},
 							{ merge: true }
 						); // дальше говнокод; необходимо написать цикл вложенных асинхронных запросов, зависящих от предыдущего результата

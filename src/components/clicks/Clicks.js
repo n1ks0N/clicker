@@ -38,12 +38,12 @@ const Clicks = () => {
 			});
 	}, [category, update]);
 	useEffect(() => {
-		if (observer && sumTime > 0) {
+		if (observer && (date - Date.now()) / 1000 >= 1) {
 			document.title = `${Math.floor((date - Date.now()) / 1000)} сек осталось | Кликер`;
 			let timerId = setTimeout(() => {
 				setSumTime((prev) => prev - 1);
-			}, 1000);
-			if (Date.now() >= date) setSumTime(0)
+			}, 10);
+			if ((date - Date.now()) / 1000 <= 1) setSumTime(0)
 			return () => clearInterval(timerId);
 		}
 	}, [observer, sumTime, Date.now()]);
@@ -57,8 +57,8 @@ const Clicks = () => {
 					setCompleteUrls((prev) => [...prev, { id: id, href: href }]);
 			} else {
 				setCompleteUrls([taskId, { id: id, href: href }]);
-				setSumTime(Number(info.delayComplete) || 15);
-				setDate(Date.now() + Number(`${info.delayComplete}000`))
+				setSumTime(0);
+				setDate(Date.now() + Number(`${Number(info.delayComplete) + 1}000`))
 			}
 		}
 	};
@@ -86,7 +86,7 @@ const Clicks = () => {
 			});
 	};
 	useEffect(() => {
-		if (completeUrls.length - 1 === Number(category) && sumTime <= 0) {
+		if (completeUrls.length - 1 === Number(category) && sumTime <= 0 && (date - Date.now()) / 1000 <= 1) {
 			setObserver(false);
 			setCompleteUrls([]);
 			document.title = 'Задание выполнено | Кликер';
@@ -145,6 +145,7 @@ const Clicks = () => {
 				.then(() => setUpdate((prev) => !prev));
 		}
 	}, [completeUrls, sumTime]);
+	console.log(Object.values(tasks).map((data) => data.users[mail].seconds * 1000 - Date.now()))
 	return (
 		<div>
 			<h1 className="clicks__title">Категория: {category} клика</h1>
@@ -195,7 +196,7 @@ const Clicks = () => {
 													onClick={(e) => clickDone(e.currentTarget)}
 												>
 													{
-													Date.parse(data.users[mail]) > Date.now()
+													data.users[mail].seconds * 1000 > Date.now()
 													? 
 													<button type="button" className="btn btn-primary" disabled>
 														Кликнуть

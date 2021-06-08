@@ -57,7 +57,7 @@ const Clicks = () => {
 					setCompleteUrls((prev) => [...prev, { id: id, href: href }]);
 			} else {
 				setCompleteUrls([taskId, { id: id, href: href }]);
-				setSumTime(Number(info.delayComplete) - Math.floor(Number(info.delayComplete) / 5) || 15);
+				setSumTime(Number(info.delayComplete) || 15);
 				setDate(Date.now() + Number(`${info.delayComplete}000`))
 			}
 		}

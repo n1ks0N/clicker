@@ -39,14 +39,14 @@ const Clicks = () => {
 	}, [category, update]);
 	useEffect(() => {
 		if (observer && sumTime > 0) {
-			document.title = `${sumTime} сек осталось | Кликер`;
+			document.title = `${Math.floor((date - Date.now()) / 1000)} сек осталось | Кликер`;
 			let timerId = setTimeout(() => {
 				setSumTime((prev) => prev - 1);
 			}, 1000);
 			if (Date.now() >= date) setSumTime(0)
 			return () => clearInterval(timerId);
 		}
-	}, [observer, sumTime]);
+	}, [observer, sumTime, Date.now()]);
 
 	const clickDone = ({ id, href }) => {
 		if (mail) {

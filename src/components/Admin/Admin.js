@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { urlAd, keyAd } from '../../utils/constants/api.json';
+import { useSelector } from 'react-redux';
 import firebase from 'firebase'
 import { fb } from '../../utils/constants/firebase'
 import InputText from './InputText';
@@ -7,6 +8,9 @@ import Input from '../../elements/Input'
 import './Admin.css';
 
 const Admin = () => {
+	const {
+		user: { mail }
+	} = useSelector((store) => store);
 	const [data, setData] = useState('');
 	const [sender, setSender] = useState(false)
 
@@ -26,9 +30,7 @@ const Admin = () => {
 	const usersDB = fb.firestore().collection('users')
 
 	const login = () => {
-		const a = true
 		if (
-			a ||
 			logRef.current.value === 'Aprel16' &&
 			passRef.current.value === 'qwerty16'
 		) {
@@ -47,7 +49,7 @@ const Admin = () => {
 				fb.firestore().collection('tasks').doc(`${i}`).get().then((doc) => {
 					if (doc.exists) {
 						for (let key in doc.data()) {
-							if (doc.data()[key].reports > 0) {
+							if (doc.data()[key].reports > 0 && doc.data()[key].reportActive) {
 								setTasks((prev) => [...prev, doc.data()[key]])
 							}
 						}
@@ -61,6 +63,39 @@ const Admin = () => {
 			})
 		}
 	};
+	useEffect(() => {
+		if (
+			mail === 'admin@clicker.com'
+		) {
+			let req = new XMLHttpRequest();
+			req.onreadystatechange = () => {
+				// eslint-disable-next-line
+				if (req.readyState == XMLHttpRequest.DONE) {
+					const result = JSON.parse(req.responseText);
+					setData(() => result.record);
+				}
+			};
+			req.open('GET', urlAd, true);
+			req.setRequestHeader('X-Master-Key', keyAd);
+			req.send();
+			for (let i = 1; i <= 5; i++) {
+				fb.firestore().collection('tasks').doc(`${i}`).get().then((doc) => {
+					if (doc.exists) {
+						for (let key in doc.data()) {
+							if (doc.data()[key].reports > 0 && doc.data()[key].reportActive) {
+								setTasks((prev) => [...prev, doc.data()[key]])
+							}
+						}
+					}
+				})
+			}
+			fb.firestore().collection('users').get().then((querySnapshot) => {
+				querySnapshot.forEach((doc) => {
+					setSumMoney(prev => prev + doc.data().allow_money)
+				});
+			})
+		}
+	}, [mail])
 
 	const change = ({ param, name, index }) => {
 		let value = param.replaceAll(`"`, `'`); // все кавычки заменяются на одиночные
@@ -154,6 +189,33 @@ const Admin = () => {
 							tasksDB.doc(`${taskDoc}`).update({
 								[key]: firebase.firestore.FieldValue.delete()
 							});
+						}
+					}
+				}
+			})
+	}
+	const clearTask = ({ id }) => {
+		const taskId = id.split('/')[0];
+		const taskDoc = id.split('/')[1];
+		tasksDB
+			.doc(`${taskDoc}`)
+			.get()
+			.then((doc) => {
+				if (doc.exists) {
+					for (let key in doc.data()) {
+						if (doc.data()[key].id === taskId) {
+							tasksDB.doc(`${taskDoc}`).set({
+								[key]: {
+									total_clicks: doc.data()[key].total_clicks,
+									author: doc.data()[key].author,
+									reports: doc.data()[key].reports,
+									spent_clicks: doc.data()[key].spent_clicks,
+									urls: doc.data()[key].urls,
+									id: doc.data()[key].id,
+									name: doc.data()[key].name,
+									reportActive: false
+								}
+							}, { merge: true });
 						}
 					}
 				}
@@ -657,7 +719,8 @@ const Admin = () => {
 									<li key={i}>{url}</li>
 								)}
 							</ul>
-							<button type="button" className="btn btn-danger" id={`${data.id}/${data.urls.length}`} onClick={(e) => delTask(e.target)}>Удалить задание</button>
+							<button type="button" className="btn btn-danger" id={`${data.id}/${data.urls.length}/del`} onClick={(e) => delTask(e.target)}>Удалить задание</button>
+							<button type="button" className="btn btn-warning" id={`${data.id}/${data.urls.length}/clear`} onClick={(e) => clearTask(e.target)}>Стереть задание</button>
 						</div>
 					)}</div>
 				</div>

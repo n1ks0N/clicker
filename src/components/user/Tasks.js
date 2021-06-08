@@ -42,7 +42,9 @@ const Tasks = ({ data, mail, tasks, setUpdate }) => {
 													spent_clicks: doc.data()[key].spent_clicks,
 													urls: doc.data()[key].urls,
 													id: doc.data()[key].id,
-													name: doc.data()[key].name
+													name: doc.data()[key].name,
+													reportActive: doc.data()[key].reportActive,
+													users: doc.data()[key].users
 												}
 											},
 											{ merge: true }

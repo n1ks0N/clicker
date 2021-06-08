@@ -59,7 +59,9 @@ const Add = ({ data, mail, setUpdate }) => {
 									spent_clicks: 0,
 									urls,
 									id: createName(4),
-									name: nameValue.substr(0, 69)
+									name: nameValue.substr(0, 69),
+									reportActive: false,
+									users: {}
 								}
 							},
 							{ merge: true }

@@ -14,7 +14,6 @@ import { fb } from './utils/constants/firebase';
 
 const App = () => {
 	const { user: { alert } } = useSelector((store) => store)
-	console.log(alert)
 	const alertStyle = useMemo(
 		() => ({
 			display: alert ? 'block' : 'none'
@@ -109,7 +108,7 @@ by https://github.com/n1ks0N
 			<header>
 				<menu>
 					<Link to="/">
-						<li>Главная</li>
+						<li style={{ fontSize: '26px', fontWeight: 'bold' }}>Кликер</li>
 					</Link>
 					<Link to="/clicks?1">
 						<li>1 клик</li>

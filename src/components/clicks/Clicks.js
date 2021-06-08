@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { fb } from '../../utils/constants/firebase';
 import { vip } from '../../utils/constants/const.json';
 
@@ -19,6 +18,7 @@ const Clicks = () => {
 	const tasksDB = fb.firestore().collection('tasks');
 	const userDoc = mail ? fb.firestore().collection('users').doc(`${mail}`) : '';
 	const [category, setCategory] = useState(window.location.search.split('?')[1]);
+	const [date, setDate] = useState(false)
 	useEffect(() => {
 		setCategory(window.location.search.split('?')[1]);
 	}, [window.location.search]);
@@ -43,6 +43,7 @@ const Clicks = () => {
 			let timerId = setTimeout(() => {
 				setSumTime((prev) => prev - 1);
 			}, 1000);
+			if (Date.now() >= date) setSumTime(0)
 			return () => clearInterval(timerId);
 		}
 	}, [observer, sumTime]);
@@ -56,7 +57,8 @@ const Clicks = () => {
 					setCompleteUrls((prev) => [...prev, { id: id, href: href }]);
 			} else {
 				setCompleteUrls([taskId, { id: id, href: href }]);
-				setSumTime(Number(info.delayComplete) || 15);
+				setSumTime(Number(info.delayComplete) - Math.floor(Number(info.delayComplete) / 5) || 15);
+				setDate(Date.now() + Number(`${info.delayComplete}000`))
 			}
 		}
 	};
@@ -72,7 +74,8 @@ const Clicks = () => {
 							tasksDB.doc(`${category}`).set(
 								{
 									[key]: {
-										reports: doc.data()[key].reports + 1
+										reports: doc.data()[key].reports + 1,
+										reportActive: true
 									}
 								},
 								{ merge: true }
@@ -86,7 +89,6 @@ const Clicks = () => {
 		if (completeUrls.length - 1 === Number(category) && sumTime <= 0) {
 			setObserver(false);
 			setCompleteUrls([]);
-			console.log(info.delayRepeat)
 			document.title = 'Задание выполнено | Кликер';
  			for (let i = 0; i < completeUrls.length - 1; i++) {
 				 document.getElementById(`${completeUrls[0]}/${i}`).firstChild.disabled = true
@@ -108,7 +110,11 @@ const Clicks = () => {
 									{
 										[key]: {
 											spent_clicks:
-												doc.data()[key].spent_clicks + Number(category)
+												doc.data()[key].spent_clicks + Number(category),
+											users: {
+												...doc.data()[key].users,
+												[mail]: new Date(Date.now() + Number(`${info.delayRepeat}000`))
+											}
 										}
 									},
 									{ merge: true }
@@ -180,7 +186,7 @@ const Clicks = () => {
 											)}
 										</p>
 										{data.urls.map((link, i) => (
-											<div className="card__buttons" key ={i}>
+											<div className="card__buttons" key={i}>
 												<a
 													className="card-link"
 													href={link}
@@ -188,9 +194,17 @@ const Clicks = () => {
 													id={`${data.id}/${i}`}
 													onClick={(e) => clickDone(e.currentTarget)}
 												>
+													{
+													Date.parse(data.users[mail]) > Date.now()
+													? 
+													<button type="button" className="btn btn-primary" disabled>
+														Кликнуть
+													</button>
+													:
 													<button type="button" className="btn btn-primary">
 														Кликнуть
 													</button>
+													}
 												</a>
 											</div>
 										))}

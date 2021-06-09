@@ -145,7 +145,7 @@ const Clicks = () => {
 				.then(() => setUpdate((prev) => !prev));
 		}
 	}, [completeUrls, sumTime]);
-	console.log(Object.values(tasks).map((data) => data.users[mail].seconds * 1000 - Date.now()))
+	// console.log(Object.values(tasks).map((data) => data.users[mail].seconds * 1000 - Date.now()))
 	return (
 		<div>
 			<h1 className="clicks__title">Категория: {category} клика</h1>

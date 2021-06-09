@@ -25,6 +25,7 @@ const Clicks = () => {
 	window.onfocus = () => {
 		if (observer) {
 			setObserver(false);
+			if (date) setDate(prev => prev - Date.now())
 		}
 	};
 	useEffect(() => {
@@ -55,6 +56,7 @@ const Clicks = () => {
 			if (completeUrls[0] === taskId) {
 				if (!completeUrls.some((val) => val.id === id))
 					setCompleteUrls((prev) => [...prev, { id: id, href: href }]);
+					setDate(prev => Date.now() + prev)
 			} else {
 				setCompleteUrls([taskId, { id: id, href: href }]);
 				setSumTime(0);

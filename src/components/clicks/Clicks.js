@@ -195,7 +195,7 @@ const Clicks = () => {
 													id={`${data.id}/${i}`}
 													onClick={(e) => clickDone(e.currentTarget)}
 												>
-													{
+													{/* {
 													data.users[mail].seconds * 1000 > Date.now()
 													? 
 													<button type="button" className="btn btn-primary" disabled>
@@ -205,7 +205,21 @@ const Clicks = () => {
 													<button type="button" className="btn btn-primary">
 														Кликнуть
 													</button>
-													}
+													} */}
+													{ mail in data.users ?
+														data.users[mail].seconds * 1000 > Date.now() ?
+														<button type="button" className="btn btn-primary" disabled>
+														Кликнуть
+														</button>
+														:
+														<button type="button" className="btn btn-primary">
+														Кликнуть
+													</button>
+													:
+													<button type="button" className="btn btn-primary">
+														Кликнуть
+													</button>
+												}
 												</a>
 											</div>
 										))}

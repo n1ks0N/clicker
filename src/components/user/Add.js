@@ -23,7 +23,9 @@ const Add = ({ data, mail, setUpdate }) => {
 		info.urls.forEach(url => values.forEach(({ value }) => {
 			if (url === value) allow = false
 		}))
-		if (data.clicks >= Number(totalClicksValue) * categoryValue.length && totalClicksValue && allow) {
+		if (data.clicks >= Number(totalClicksValue) * categoryValue.length + 10 && totalClicksValue && allow) {
+			userDoc.get().then((doc) => {
+				if (doc.exists && doc.data().clicks >= Number(totalClicksValue) * categoryValue.length + 10) {
 			let urls = []; // ссылки в задании
 			values.forEach(({ value }) => {
 				value.length > 0
@@ -69,8 +71,7 @@ const Add = ({ data, mail, setUpdate }) => {
 					}
 				})
 				.then(() => {
-					userDoc.get().then((doc) => {
-						if (doc.exists) {
+
 							userDoc.set(
 								{
 									clicks:
@@ -80,8 +81,6 @@ const Add = ({ data, mail, setUpdate }) => {
 								},
 								{ merge: true }
 							);
-						}
-					});
 				})
 				.then(() =>
 					dispatch({
@@ -92,6 +91,8 @@ const Add = ({ data, mail, setUpdate }) => {
 					})
 				)
 				.then(() => setUpdate((prev) => !prev))
+				}
+			})
 		}
 	};
 	return (

@@ -92,15 +92,6 @@ const Clicks = () => {
 			setObserver(false);
 			setCompleteUrls([]);
 			document.title = 'Задание выполнено | Кликер';
- 			for (let i = 0; i < completeUrls.length - 1; i++) {
-				 document.getElementById(`${completeUrls[0]}/${i}`).firstChild.disabled = true
-			}
-			setTimeout(() => {
-				for (let i = 0; i < completeUrls.length - 1; i++) {
-					document.getElementById(`${completeUrls[0]}/${i}`).firstChild.disabled = false
-			 }
-			}, Number(`${info.delayRepeat}000`))
-
 			tasksDB
 				.doc(`${category}`)
 				.get()
